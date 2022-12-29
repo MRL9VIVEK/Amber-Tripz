@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse
 from home.models import Categories, Course, Level, Video, UserCourse, Payment
 from django.template.loader import render_to_string
 from django.http import JsonResponse
@@ -174,7 +174,6 @@ def CHECKOUT(request, slug):
                 "email" : email,
                 "order_comments" : order_comments,
             }
-
             receipt = f"ambertripz-{int(time())}"
             order = client.order.create(
                 {
@@ -188,6 +187,7 @@ def CHECKOUT(request, slug):
                 course=course,
                 user=request.user,
                 order_id=order.get('id')
+                
             )
             payment.save()
 
@@ -208,31 +208,71 @@ def MY_COURSE(request):
 
 @csrf_exempt
 def VERIFY_PAYMENT(request):
-    if request.method == "POST":
-        data = request.POST
-        print(data)
-        try:
-            client.utility.verify_payment_signature(data)
-            razorpay_order_id = data('razorpay_order_id')
-            razorpay_payment_id = data('razorpay_order_id')
-
-            payment = Payment.objects.get(order_id = razorpay_order_id)
-            payment.payment_id = razorpay_payment_id
-            payment.status = True
-            usercourse = UserCourse (
+    def verify_signature(response_data):
+        client = razorpay.Client(auth=(KEY_ID, KEY_SECRET))
+        return client.utility.verify_payment_signature(response_data)
+    
+    if "razorpay_signature" in request.POST:
+        payment_id = request.POST.get("razorpay_payment_id", "")
+        provider_order_id = request.POST.get("razorpay_order_id", "")
+        signature_id = request.POST.get("razorpay_signature", "")
+        payment = Payment.objects.get(order_id=provider_order_id)
+        payment.payment_id = payment_id
+        payment.signature_id = signature_id
+        payment.status = True
+        usercourse = UserCourse (
                 user = payment.user,
                 course = payment.course,
             )
-            usercourse.save()
-            payment.user_course = usercourse
-            payment.save()
-            context =  {
-                'data' : data,
+        usercourse.save()
+        payment.user_course = usercourse
+        payment.save()
+        context =  {
                 'payment' : payment,
             }
-            return render(request, 'verify_payment/success.html', context)
-        except:
-            return render(request, 'verify_payment/fail.html')
+        return render(request, 'verify_payment/success.html', context)
+    else:
+        return render(request, 'verify_payment/fail.html')
+
+
+
+        # data = request.POST
+        # print(data)
+        # try:
+            # client.utility.verify_payment_signature(data)
+            # razorpay_order_id = data('razorpay_order_id')
+            # razorpay_payment_id = data('razorpay_order_id')
+            # payment_id = request.post.get('razorpay_payment_id', '')
+            # razorpay_order_id = request.post.get('razorpay_order_id', '')
+            # signature = request.post.get('razorpay_signature', '')
+            # param ={
+                # 'razorpay_order_id' : razorpay_order_id,
+                # 'razorpay_payment_id' : payment_id,
+                # 'razorpay_signature' : signature,
+            # }
+            # try:
+                # payment = Payment.objects.get(razorpay_order_id = order_id )
+            # except:
+                # return HttpResponse("404 Not Found")
+            # payment.razorpay_payment_id = payment_id
+            # payment.status = True
+            # usercourse = UserCourse (
+                # user = payment.user,
+                # course = payment.course,
+            # )
+            # usercourse.save()
+            # payment.user_course = usercourse
+            # payment.save()
+            # client.utility.verify_payment_signature(param)
+            
+            # context =  {
+                # 'data' : data,
+                # 'payment' : payment,
+                # 'param' : param,
+            # }
+            # return render(request, 'verify_payment/success.html', context)
+        # except:
+            # return render(request, 'verify_payment/fail.html')
 
             
 def WATCH_COURSE(request, slug):

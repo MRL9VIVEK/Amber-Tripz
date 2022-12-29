@@ -139,6 +139,7 @@ class UserCourse(models.Model):
 class Payment(models.Model):
     order_id = models.CharField(max_length=100,null=True, blank=True)
     payment_id = models.CharField(max_length=100,null=True, blank=True)
+    signature_id = models.CharField(max_length=100,null=True, blank=True)
     user_course = models.ForeignKey(UserCourse, on_delete=models.CASCADE, null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     course = models.ForeignKey(Course, on_delete=models.CASCADE, null=True)

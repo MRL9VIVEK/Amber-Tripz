@@ -16,33 +16,36 @@
 </div>
 <div class="q_body">
     <div class="row">
+        <form action="" method="POST">{% csrf_token %}
         <div class="col-lg-8">
             <div class="row" style="height: 500px;">
                 <div class="q_box">
-                {{qs.qs_no}}
+                {{qs.qs_no}}.&emsp;&emsp;
                 
                 {{qs}}
                 </div>  
-                <div class="q_box">
+                
             <div class="op_box">
-                <div class="op_a">
-                    {{qs.option_a}}
+                <div class="row">
+                    <div class="col-lg-6"><div class="op">
+                        {{ ansfrm.ans.0 }}&emsp;&emsp; {{qs.option_a}}
+                    </div></div>
+                    <div class="col-lg-6"><div class="op">
+                        {{ ansfrm.ans.1 }}&emsp;&emsp;{{qs.option_b}}
+                    </div></div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6"><div class="op">
+                        {{ ansfrm.ans.2 }}&emsp;&emsp;  {{qs.option_c}}
+                    </div></div>
+                    <div class="col-lg-6"><div class="op">
+                        {{ ansfrm.ans.3 }}&emsp;&emsp; {{qs.option_d}}
+                    </div></div>
                 </div>
                 
-                <div class="op_b">
-                    {{qs.option_b}}
-                </div>
-                
-                <div class="op_c">
-                    {{qs.option_c}}
-                </div>
-                
-                <div class="op_d">
-                    {{qs.option_d}}
-                </div>
             </div>
-            {{ ansfrm }}
-                </div>
+            
+                
             </div>   
             <div class="row"style="height: 150px;">
             <div class="col-lg-4">
@@ -50,7 +53,8 @@
                 
             </div>
             <div class="col-lg-4">
-                <button class="btn btn-primary"> SAVE </button>
+                <button type="SUBSMIT" class="btn btn-primary"> SAVE </button>
+                
                 
             </div>
             <div class="col-lg-4">
@@ -61,9 +65,10 @@
             
             
         </div>
+    </form>
     
         </div>
-        <div class="col-lg-4 bg">
+        <div class="col-lg-4 bg" style="background-color:#f2f7f8; border: 2px solid black;">
             <div><h3>Question</h3></div>
             <div class="row" style="float: left; margin-top: 20px; ">
                 {% for question in questions %}

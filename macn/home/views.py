@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.shortcuts import render, redirect, HttpResponse
-from home.models import Categories, Course, Level, Video, UserCourse, Payment, Questions, Test, Paper
+from home.models import Categories, Course, Level, Video, UserCourse, Payment, Questions, Test, Paper, Answer
 from django.template.loader import render_to_string
 from django.http import JsonResponse
 from django.db.models import Sum
@@ -309,11 +309,34 @@ def MY_PROFILE(request):
 
 
 def exam_home(request, qno):
-    print(qno)
     paper=request.session['paper']
     test=request.session['test']
     qts= Questions.objects.filter(test=test, paper=paper)
     qs=Questions.objects.filter(qs_no=qno)[0]
+    if request.method=='POST':
+        form=AnsChoice(request.POST or None)
+        if form.is_valid():
+            getqs=Answer.objects.filter(question=qs, student=request.user)
+            if getqs:
+                msg="Already Answered"
+                nqno=int(qno) + 1
+                print(nqno)
+                return redirect('exam_home', nqno)
+                print(msg)
+            else:
+                ans=form.cleaned_data.get('ans')
+                ansqs = Answer (
+                    student=request.user,
+                    question=qs,
+                    answer=ans
+                )
+            ansqs.save()
+            nqno=int(qno) + 1
+            print(nqno)
+            return redirect('exam_home', nqno)
+            print(getqs)
+            print(qno)
+    
     ansfrm= AnsChoice()
     context ={
         'ansfrm': ansfrm,

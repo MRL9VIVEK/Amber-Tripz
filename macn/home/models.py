@@ -2,6 +2,7 @@ from django.db import models
 from django.utils.text import slugify
 from django.db.models.signals import pre_save
 from django.contrib.auth.models import User
+from django.conf import settings
 
 # Create your models here.
 class Categories(models.Model):
@@ -157,3 +158,42 @@ class Contact(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Test(models.Model):
+    test=models.CharField(max_length=150,unique=True)
+    
+    def __str__(self):
+        return self.test
+class Paper(models.Model):
+    paper=models.CharField(max_length=150)
+
+    def __str__(self):
+        return self.paper
+
+class Questions(models.Model):
+    qs_no=models.IntegerField()
+    course = models.ForeignKey(Course, on_delete=models.CASCADE,null=True)
+    test=models.ForeignKey(Test,on_delete=models.CASCADE)
+    paper=models.ForeignKey(Paper,on_delete=models.CASCADE)
+    questions=models.TextField()
+
+    answers=models.CharField(max_length=20)
+    option_a=models.TextField()
+    option_b=models.TextField()
+    option_c=models.TextField()
+    option_d=models.TextField()
+    def __str__(self):
+        return 'Q.'+ str(self.qs_no)  + ')  '+  self.questions
+
+class Answer(models.Model):
+    student = models.ForeignKey(User, on_delete=models.CASCADE)
+    
+    question=models.ForeignKey(Questions,on_delete=models.CASCADE)
+    answer=models.CharField(max_length=20)
+    date=models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+        return self.answer
+
+    
+    

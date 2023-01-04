@@ -21,4 +21,7 @@ urlpatterns = [
     path('my-course', views.MY_COURSE, name="my_course"),
     path('verify_payment', views.VERIFY_PAYMENT, name="verify_payment"),
     path('course/watch-course/<slug:slug>', views.WATCH_COURSE, name="watch_course"),
+    path('test-series', views.TEST_SERIES, name="test_series"),
+    path('my_profile', views.MY_PROFILE, name="my_profile"),
+    path('Questions/<int:qno>', views.exam_home, name='exam_home')
 ]+ static(settings.MEDIA_URL,document_root = settings.MEDIA_ROOT)

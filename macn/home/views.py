@@ -1,10 +1,12 @@
 from django.contrib import messages
 from django.shortcuts import render, redirect, HttpResponse
-from home.models import Categories, Course, Level, Video, UserCourse, Payment
+from home.models import Categories, Course, Level, Video, UserCourse, Payment, Questions, Test, Paper
 from django.template.loader import render_to_string
 from django.http import JsonResponse
 from django.db.models import Sum
 from django.views.decorators.csrf import csrf_exempt
+from.forms import ExamChoiceFrm, AnsChoice
+from django.core import serializers
 from macn.settings import *
 import razorpay
 from time import time
@@ -277,4 +279,46 @@ def VERIFY_PAYMENT(request):
             
 def WATCH_COURSE(request, slug):
     return render(request, 'course/watch_course.html')
+
+
+def TEST_SERIES(request):
+    if request.method=='POST':
+        form=ExamChoiceFrm(request.POST or None)
+        if form.is_valid():
+            # course=Course.objects.filter(course=form.cleaned_data.get('course'))[0]
+            # print(course)
+            test=Test.objects.filter(test=form.cleaned_data.get('test'))[0]
+            request.session['test']=test.id
+            paper=Paper.objects.filter(paper=form.cleaned_data.get('paper'))[0]
+            request.session['paper']=paper.id
+            qs = Questions.objects.filter(test=test, paper=paper)
+            context ={
+                'questions': qs,
+                'qs': qs[0],
+            }
+            return render(request, 'profile/question.html', context)
+    form=ExamChoiceFrm()
+    context={
+        'form': form,
+    }
+    return render(request, 'profile/test_series.html', context)
+
+def MY_PROFILE(request):
+    return render(request, 'profile/my_profile.html')
+
+
+
+def exam_home(request, qno):
+    print(qno)
+    paper=request.session['paper']
+    test=request.session['test']
+    qts= Questions.objects.filter(test=test, paper=paper)
+    qs=Questions.objects.filter(qs_no=qno)[0]
+    ansfrm= AnsChoice()
+    context ={
+        'ansfrm': ansfrm,
+        'questions': qts,
+        'qs': qs,
+    }
+    return render(request, 'profile/question.html', context)
 

@@ -1,0 +1,49 @@
+{% extends 'profile/basic.html' %}
+{% block 'body' %}
+<script>
+    distance=20*60*1000
+                sessionStorage.setItem('distance',distance);
+</script>
+       <div class="row">
+           <div class="col-lg-3">
+               <h3>Previous attend Questions</h3>
+           </div>
+           <div class="col-lg-6">
+            <div class="row " style="margin-top: 100px;">
+                <div class="col-3">
+                    <h1>AMBER TRIPZ ONLINE TEST SERIES</h1>
+                </div>
+                <div class="col-3">
+                    <div class="row">
+                        <div class="col-6">Total Marks:30</div>
+                        <div class="col-6">Time:30 Minutes</div>
+                        
+                    </div>
+                </div>
+                <div class="col-3">
+                    <h4>Welcome: {{user.first_name}} {{user.last_name}}</h4>
+                    
+                </div>
+                <div class=row>
+                <form id="registration" class="form-inline " method="POST" actiom="">{% csrf_token %}
+                <div class="col-6">
+                    {{form.course}}
+                    {{form.test}}
+                    {{form.paper}}    
+                </div><br><br>
+                <div class="col-6">
+                    
+                    <button class="btn btn-primary" style="width: 30%; height: 100px; line-height: 100px;" type='submit'><h3>Enter To Exam</h3></button>
+                </div>
+            </form>
+                </div>
+              
+                <div class="col-3">
+                    <h4><a href="{% url 'logout' %}" style="color: black;" >Want to Exit Click Here</a></h4> 
+                </div>
+            </div>
+           </div>
+           <div class="col-lg-3"></div>
+       </div>
+
+{% endblock %}

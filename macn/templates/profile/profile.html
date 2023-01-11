@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %} {{user.first_name}} {% endblock title %}
+{% load static %}
+{%  load course_tags %}
+{% block content %} 
+<style>
+.box{
+  display:inline-block;
+  border:2px solid;
+  
+}
+#box1{
+  width:200px;
+  height:500px;
+  background-color: rgba(var(--bs-gigas-rgb));
+}
+#box2{
+  display: flexbox;
+  position:fixed;
+  left:240px;
+  top:100px;
+  width:800px;
+  height:800px;
+  padding:8px;
+  
+}
+.item{
+  
+  border:2px solid black;
+  width:100px;
+  height:50px;
+  margin: 3px;
+  padding: 3px;
+  
+}
+</style>
+
+<div class="box" id="box1">
+  <a>aa</a>
+</div>
+<div class="box" id="box2">
+  <div class="item" id="item1">First box</div>
+  <div class="item" id="item2">Second box</div>
+  <div class="item" id="item3">Third box</div>
+  <div class="item" id="item4">Fourth box</div>
+  <div class="item" id="item5">Fifth box</div>
+  <div class="item" id="item6">Sixth box</div>
+</div>
+
+
+{% endblock %}

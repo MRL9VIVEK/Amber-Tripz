@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.shortcuts import render, redirect, HttpResponse
-from home.models import Categories, Course, Level, Video, UserCourse, Payment, Questions, Test, Paper, Answer
+from home.models import Categories, Course, Level, Video, UserCourse, Payment, Questions, Test, Paper, Answer, Contact, Ppr
 from django.template.loader import render_to_string
 from django.http import JsonResponse
 from django.db.models import Sum
@@ -10,6 +10,7 @@ from django.core import serializers
 from macn.settings import *
 import razorpay
 from time import time
+from django.core.paginator import Paginator
 
 client = razorpay.Client(auth=(KEY_ID, KEY_SECRET))
 
@@ -19,8 +20,6 @@ client = razorpay.Client(auth=(KEY_ID, KEY_SECRET))
 def home(request): 
     category = Categories.objects.all().order_by('id')[0:5]
     course = Course.objects.filter(status = 'PUBLISH').order_by('-id')
-    
-    print(course)
     context = {
         'category': category,
         'course': course,
@@ -29,12 +28,20 @@ def home(request):
     return render(request, 'main/home.html', context)
 
 def contact(request):
-    category = Categories.get_all_category(Categories)
     
-    context = {
-        'category' : category,
-    }
-    return render(request, 'main/contact.html', context)
+    if request.method=="POST":
+        name = request.POST.get('name')
+        emailn = request.POST.get('email')
+        message = request.POST.get('message')
+        contact = Contact(name=name, email=emailn, desc=message)
+        print(emailn)
+        emailo= Contact.objects.filter(email=emailn)
+        print(emailo)
+        if emailo:
+            pass
+        else:
+            contact.save()
+    return render(request, 'main/contact.html')
 
 def about(request): 
     category = Categories.get_all_category(Categories)
@@ -96,7 +103,6 @@ def SEARCH_COURSE(request):
     
     query = request.GET['query']
     course = Course.objects.filter(title__icontains = query)
-    print(course)
     context = {
         'course':course,
         'category' : category,
@@ -133,6 +139,89 @@ def PAGE_NOT_FOUND(request):
     }
     return render(request, "error/404.html", context)
 
+
+def MY_COURSE(request):
+    course = UserCourse.objects.filter(user = request.user)
+    
+    context = {
+        'course': course,
+        
+    }
+    return render(request,'course/my-course.html', context)
+
+
+def MY_COURSE_SLUG(request, slug):
+    course = Course.objects.get(slug = slug)
+    print(course)
+    context = {
+    'course' : course,
+    }
+    return render(request, "profile/profile.html", context)
+
+def MY_TEST_SERIES(request):
+    course = UserCourse.objects.filter(user = request.user)
+    
+    context = {
+        'course': course,
+        
+    }
+    return render(request,'profile/my_test_series.html', context)
+
+
+def MY_TEST_SERIES_SLUG(request, slug):
+    course = Course.objects.get(slug = slug)
+    print(course)
+    context = {
+    'course' : course,
+    }
+    return render(request, "profile/online_test.html", context)
+
+def QUESTIONS(request, slug):
+    ppr = Ppr.objects.get(new_slug = slug)
+    
+    context = {
+    'ppr' : ppr,
+    }
+    return render(request, "profile/question_n.html", context)
+
+
+    
+def MY_VIDEOS(request):
+    course = UserCourse.objects.filter(user = request.user)
+    
+    context = {
+        'course': course,
+        
+    }
+    return render(request,'profile/my_videos.html', context)
+
+def MY_VIDEOS_SLUG(request, slug):
+    course = Course.objects.get(slug = slug)
+    print(course)
+    context = {
+    'course' : course,
+    }
+    return render(request, "profile/profile.html", context)
+
+
+def MY_E_BOOKS(request):
+    course = UserCourse.objects.filter(user = request.user)
+    
+    context = {
+        'course': course,
+        
+    }
+    return render(request,'profile/my_e-books.html', context)
+
+
+
+def MY_E_BOOKS_SLUG(request, slug):
+    course = Course.objects.get(slug = slug)
+    print(course)
+    context = {
+    'course' : course,
+    }
+    return render(request, "profile/profile.html", context)
 
 def CHECKOUT(request, slug):
     course = Course.objects.get(slug = slug)
@@ -200,12 +289,7 @@ def CHECKOUT(request, slug):
  
     return render(request, 'checkout/checkout.html', context)
 
-def MY_COURSE(request):
-    course = UserCourse.objects.filter(user = request.user)
-    context = {
-        'course': course,
-    }
-    return render(request,'course/my-course.html', context)
+
 
 
 @csrf_exempt
@@ -282,24 +366,47 @@ def WATCH_COURSE(request, slug):
 
 
 def TEST_SERIES(request):
+    try:
+        exam=Answer.objects.filter(student=request.user)[0].question
+        
+    except:
+        msg="Select Course And Paper"
     if request.method=='POST':
         form=ExamChoiceFrm(request.POST or None)
         if form.is_valid():
-            # course=Course.objects.filter(course=form.cleaned_data.get('course'))[0]
-            # print(course)
+            
             test=Test.objects.filter(test=form.cleaned_data.get('test'))[0]
             request.session['test']=test.id
             paper=Paper.objects.filter(paper=form.cleaned_data.get('paper'))[0]
             request.session['paper']=paper.id
-            qs = Questions.objects.filter(test=test, paper=paper)
-            context ={
-                'questions': qs,
-                'qs': qs[0],
-            }
-            return render(request, 'profile/question.html', context)
+            if test == exam.test and paper == exam.paper:
+                form=ExamChoiceFrm()
+                context={
+                    'form': form,
+                    'msg': 'Exam Already Completed' ,
+                }
+                return render(request, 'profile/test_series.html', context)
+                
+            else:
+                try:
+                    qs = Questions.objects.filter(test=test, paper=paper)
+                    context ={
+                        'questions': qs,
+                        'qs': qs[0],
+                    }
+                    return render(request, 'profile/question.html', context)
+                except:
+                    form=ExamChoiceFrm()
+                    context={
+                        'form': form,
+                        'msg': 'No Question Paper Found' ,
+                    }
+                    return render(request, 'profile/test_series.html', context)
     form=ExamChoiceFrm()
+    msg=""
     context={
         'form': form,
+        'msg': msg,
     }
     return render(request, 'profile/test_series.html', context)
 
@@ -312,36 +419,35 @@ def exam_home(request, qno):
     paper=request.session['paper']
     test=request.session['test']
     qts= Questions.objects.filter(test=test, paper=paper)
-    qs=Questions.objects.filter(qs_no=qno)[0]
-    if request.method=='POST':
-        form=AnsChoice(request.POST or None)
-        if form.is_valid():
-            getqs=Answer.objects.filter(question=qs, student=request.user)
-            if getqs:
-                msg="Already Answered"
-                nqno=int(qno) + 1
-                print(nqno)
-                return redirect('exam_home', nqno)
-                print(msg)
-            else:
+    try:
+        qs=Questions.objects.filter(qs_no=qno)[0]
+    except:
+        qs=Questions.objects.filter(qs_no=1)[0]
+    getqs=Answer.objects.filter(question=qs, student=request.user)
+    print(getqs)
+    if getqs:
+        msg="Already Answered"
+        request.session['msg']=msg
+    else:
+        if request.method=='POST':
+            form=AnsChoice(request.POST or None)
+            if form.is_valid():
                 ans=form.cleaned_data.get('ans')
                 ansqs = Answer (
                     student=request.user,
                     question=qs,
                     answer=ans
                 )
-            ansqs.save()
-            nqno=int(qno) + 1
-            print(nqno)
-            return redirect('exam_home', nqno)
-            print(getqs)
-            print(qno)
-    
+                ansqs.save()
+                nqno=int(qno) + 1
+                print(nqno)
+                request.session['msg']="Ans Saved Successfully"
+                return redirect('exam_home', nqno)
     ansfrm= AnsChoice()
     context ={
         'ansfrm': ansfrm,
         'questions': qts,
         'qs': qs,
-    }
+        }
     return render(request, 'profile/question.html', context)
-
+    

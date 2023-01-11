@@ -1,6 +1,6 @@
 {% extends 'profile/basic.html' %}
 {% block 'body' %}
-<div class="mynav">
+<div class="mynav" >
     <div class="row">
         <div class="col-lg-2">
             <div class="text">Name : {{user.first_name}} {{user.last_name}}</div>
@@ -11,29 +11,12 @@
         <div class="col-lg-3"></div>
         <div class="col-lg-0">
             
-            <script>
-                var x = setInterval(function() {
-                        distance=sessionStorage.getItem('distance')
-                        distance=distance-1000
-                        sessionStorage.setItem('distance',distance);        
-                    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-                    document.getElementById("demo").innerHTML = minutes + "m " + seconds + "s ";
-                    if (distance < 600000) {
-                        
-                        document.getElementById("demo").style.color="red";
-                     }
-                     if(distance<0){
-                        clearInterval(x);
-                        // document.getElementById("demo").innerHTML = "EXPIRED"
-                        window.location.assign("{% url 'test_series'%}")
-                     }
-                    }, 1000);
-                </script>
             <div class="text"> Time :  <span id=demo></span></div></div>
     </div>
 
 </div>
+
+
 <div class="q_body">
     <div class="row">
         <form action="" method="POST">{% csrf_token %}
@@ -41,29 +24,30 @@
             <!-- {{request.session.msg}} -->
             <div class="row" style="height: 500px;">
                 <div class="q_box">
-                {{qs.qs_no}}.&emsp;&emsp;
-                
-                {{qs}}
+                    {% for q in ppr.que_set.all %}
+                    {{ q.questions }}
+                    
+                    {% endfor %}
                 </div>  
                 
             <div class="op_box">
                 <!-- {{msg}} -->
-                <div class="row">
+                <!-- <div class="row">
                     <div class="col-lg-6"><div class="op">
-                        {{ ansfrm.ans.0 }}&emsp;&emsp; {{qs.option_a}}
+                        <li>{{ q.option_a }}</li>
                     </div></div>
                     <div class="col-lg-6"><div class="op">
-                        {{ ansfrm.ans.1 }}&emsp;&emsp;{{qs.option_b}}
-                    </div></div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-6"><div class="op">
-                        {{ ansfrm.ans.2 }}&emsp;&emsp;  {{qs.option_c}}
-                    </div></div>
-                    <div class="col-lg-6"><div class="op">
-                        {{ ansfrm.ans.3 }}&emsp;&emsp; {{qs.option_d}}
+                        <li>{{ q.option_b }}</li>
                     </div></div>
                 </div>
+                <div class="row">
+                    <div class="col-lg-6"><div class="op">
+                        <li>{{ q.option_c }}</li>
+                    </div></div>
+                    <div class="col-lg-6"><div class="op">
+                        <li>{{ q.option_d }}</li>
+                    </div></div>
+                </div> -->
                 
             </div>
             
@@ -71,7 +55,7 @@
             </div>   
             <div class="row"style="height: 150px;">
             <div class="col-lg-4">
-                <a href="{% url 'exam_home' qs.qs_no|add:-1 %}" class="btn btn-primary"> < PREVIOUS</a>
+                <a href="" class="btn btn-primary"> < PREVIOUS</a>
                 
             </div>
             <div class="col-lg-4">
@@ -80,7 +64,7 @@
                 
             </div>
             <div class="col-lg-4">
-                <a href="{% url 'exam_home' qs.qs_no|add:1 %}" class="btn btn-primary"> NEXT > </a>
+                <a href="" class="btn btn-primary"> NEXT > </a>
                 
             </div>
             
@@ -95,7 +79,7 @@
             <div class="row" style="float: left; margin-top: 20px; ">
                 {% for question in questions %}
                 <div class="col-lg-3" style="margin-top: 30px;"> <a href="{% url 'exam_home' question.qs_no %}" class="btn btn-success">{{ question.qs_no }}</a> </div>
-                <!-- <div class="col-lg-3" style="margin-top: 30px;"><a href="https://yahoo.com" class="btn">{{ question.qs_no }}</a></div> -->
+                
                 {% endfor %}
             </div>
             

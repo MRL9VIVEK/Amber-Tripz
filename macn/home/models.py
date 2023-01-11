@@ -3,6 +3,7 @@ from django.utils.text import slugify
 from django.db.models.signals import pre_save
 from django.contrib.auth.models import User
 from django.conf import settings
+from autoslug import AutoSlugField
 
 # Create your models here.
 class Categories(models.Model):
@@ -122,6 +123,33 @@ class Video(models.Model):
     def __str__(self):
         return self.title
 
+class Ppr(models.Model):
+    serial_number = models.IntegerField(null=True)
+    title = models.CharField(max_length=300, null=True)
+    course = models.ForeignKey(Course,on_delete=models.CASCADE, null=True)
+    new_slug = AutoSlugField(populate_from='title', unique=True, null=True, default=None)
+    
+    time_duration = models.IntegerField(null=True)
+    
+
+    def __str__(self):
+        return self.title
+
+class Que(models.Model):
+    qs_no=models.IntegerField()
+    course = models.ForeignKey(Course, on_delete=models.CASCADE,null=True)
+    ppr = models.ForeignKey(Ppr, on_delete=models.CASCADE,null=True)
+    subject = models.CharField(max_length=300, null=True)
+    questions=models.TextField(null=True)
+    answers=models.CharField(max_length=20, null=True)
+    option_a=models.TextField(null=True)
+    option_b=models.TextField(null=True)
+    option_c=models.TextField(null=True)
+    option_d=models.TextField(null=True)
+    
+    disc=models.TextField(null=True)
+    def __str__(self):
+        return 'Q.'+ str(self.qs_no)  + ')  '+  self.questions
 
         
 class UserCourse(models.Model):
@@ -157,7 +185,7 @@ class Contact(models.Model):
     desc = models.CharField(max_length=500, null=True, blank=True)
 
     def __str__(self):
-        return self.name
+        return self.email
 
 
 class Test(models.Model):
@@ -185,6 +213,7 @@ class Questions(models.Model):
     option_d=models.TextField()
     def __str__(self):
         return 'Q.'+ str(self.qs_no)  + ')  '+  self.questions
+
 
 class Answer(models.Model):
     student = models.ForeignKey(User, on_delete=models.CASCADE)

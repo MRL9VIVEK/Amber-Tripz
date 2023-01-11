@@ -11,10 +11,22 @@ class Requirements_TabularInline(admin.TabularInline):
 class Video_TabularInline(admin.TabularInline):
     model = Video
 
+class Ppr_TabularInline(admin.TabularInline):
+    model = Ppr
+
+class Que_Inline(admin.TabularInline):
+    model = Que
 
 
 class course_admin(admin.ModelAdmin):
-    inlines = ( Course_Features_TabularInline, Requirements_TabularInline, Video_TabularInline)
+    inlines = ( Course_Features_TabularInline, Requirements_TabularInline, Video_TabularInline, Ppr_TabularInline)
+
+class ppr_admin(admin.ModelAdmin):
+    inlines = [
+        Que_Inline
+    ]
+
+
 admin.site.register(Categories)
 admin.site.register(Author)
 admin.site.register(Course, course_admin)
@@ -31,3 +43,5 @@ admin.site.register(Test)
 admin.site.register(Paper)
 admin.site.register(Questions)
 admin.site.register(Answer)
+admin.site.register(Ppr, ppr_admin)
+admin.site.register(Que)

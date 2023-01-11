@@ -18,10 +18,21 @@ urlpatterns = [
     path('accounts/profile', user_login.PROFILE, name= "profile"),
     path('accounts/profile/update', user_login.PROFILE_UPDATE, name= "profile_update"),
     path('checkout/<slug:slug>', views.CHECKOUT, name="checkout"),
-    path('my-course', views.MY_COURSE, name="my_course"),
     path('verify_payment', views.VERIFY_PAYMENT, name="verify_payment"),
     path('course/watch-course/<slug:slug>', views.WATCH_COURSE, name="watch_course"),
     path('test-series', views.TEST_SERIES, name="test_series"),
     path('my_profile', views.MY_PROFILE, name="my_profile"),
-    path('Questions/<int:qno>', views.exam_home, name='exam_home')
+    path('Questions/<int:qno>', views.exam_home, name='exam_home'),
+    path('my-course', views.MY_COURSE, name="my_course"),
+    path('my-course/<slug:slug>', views.MY_COURSE_SLUG, name='my_course_slug'),
+    path('my-test-series', views.MY_TEST_SERIES, name="my_test_series"),
+    path('my-test-series/<slug:slug>', views.MY_TEST_SERIES_SLUG, name="my_test_series_slug"),
+    path('Questions/<slug>', views.QUESTIONS, name="questions"),
+    path('my-videos', views.MY_VIDEOS, name="my_videos"),
+    path('my-videos/<slug:slug>', views.MY_VIDEOS_SLUG, name="my_videos_slug"),
+    path('my-e-books', views.MY_E_BOOKS, name="my_e-books"),
+    path('my-e-books/<slug:slug>', views.MY_E_BOOKS_SLUG, name="my_e-books"),
+    
+
+    
 ]+ static(settings.MEDIA_URL,document_root = settings.MEDIA_ROOT)

@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.shortcuts import render, redirect, HttpResponse
-from home.models import Categories, Course, Level, Video, UserCourse, Payment, Questions, Test, Paper, Answer, Contact, Ppr
+from home.models import Categories, Course, Level, Video, UserCourse, Payment, Questions, Test, Paper, Answer, Que, Contact, Ppr
 from django.template.loader import render_to_string
 from django.http import JsonResponse
 from django.db.models import Sum
@@ -10,7 +10,7 @@ from django.core import serializers
 from macn.settings import *
 import razorpay
 from time import time
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 client = razorpay.Client(auth=(KEY_ID, KEY_SECRET))
 
@@ -31,6 +31,7 @@ def contact(request):
     
     if request.method=="POST":
         name = request.POST.get('name')
+        
         emailn = request.POST.get('email')
         message = request.POST.get('message')
         contact = Contact(name=name, email=emailn, desc=message)
@@ -102,7 +103,9 @@ def SEARCH_COURSE(request):
     category = Categories.get_all_category(Categories)
     
     query = request.GET['query']
+    print(query)
     course = Course.objects.filter(title__icontains = query)
+    print(course)
     context = {
         'course':course,
         'category' : category,
@@ -177,10 +180,32 @@ def MY_TEST_SERIES_SLUG(request, slug):
     return render(request, "profile/online_test.html", context)
 
 def QUESTIONS(request, slug):
-    ppr = Ppr.objects.get(new_slug = slug)
+    if request.method=='GET':
+        ppr = Ppr.objects.get(new_slug = slug)
+    print(ppr)
+    
+    que = Que.objects.filter(ppr=ppr)
+    paginator=Paginator(que, 1)
+    page_number = request.GET.get('page', 1)
+    que = paginator.get_page(page_number)
+    # print(que)
+    #  ..................
+    # all_que = Paginator(Que.objects.filter(ppr=ppr),1)
+    # page = request.GET.get('page')
+    # try:
+    #     que = all_que.page(page)
+    # except PageNotAnInteger:
+    #     que = all_que.page(1)
+    # except EmptyPage:
+    #     que = all_que.page(all_que.num_page)
+    # ..................
+    
     
     context = {
-    'ppr' : ppr,
+        
+        'ppr' : ppr,
+        'que' :que,
+        # 'quefinal' : quefinal,
     }
     return render(request, "profile/question_n.html", context)
 

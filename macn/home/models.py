@@ -136,6 +136,7 @@ class Ppr(models.Model):
         return self.title
 
 class Que(models.Model):
+    id = models.AutoField(primary_key=True)
     qs_no=models.IntegerField()
     course = models.ForeignKey(Course, on_delete=models.CASCADE,null=True)
     ppr = models.ForeignKey(Ppr, on_delete=models.CASCADE,null=True)

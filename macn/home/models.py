@@ -147,10 +147,31 @@ class Que(models.Model):
     option_b=models.TextField(null=True)
     option_c=models.TextField(null=True)
     option_d=models.TextField(null=True)
-    
     disc=models.TextField(null=True)
     def __str__(self):
         return 'Q.'+ str(self.qs_no)  + ')  '+  self.questions
+
+
+class Ans(models.Model):
+    student = models.ForeignKey(User, on_delete=models.CASCADE)
+    que=models.ForeignKey(Que,on_delete=models.CASCADE)
+    ppr=models.ForeignKey(Ppr,on_delete=models.CASCADE, null=True)
+    answer=models.CharField(max_length=20)
+    
+    score=models.FloatField(default=0)
+    # date=models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+        return self.answer
+
+class Result(models.Model):
+    student = models.ForeignKey(User, on_delete=models.CASCADE)
+    ppr=models.ForeignKey(Ppr,on_delete=models.CASCADE, null=True)
+    correct_answer=models.FloatField(default=0)
+    wrong_answer=models.FloatField(default=0)
+    not_answer=models.FloatField(default=0)
+    def __str__(self):
+        
+        return self.student.username
 
         
 class UserCourse(models.Model):

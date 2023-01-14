@@ -1,11 +1,11 @@
 from django.contrib import messages
 from django.shortcuts import render, redirect, HttpResponse
-from home.models import Categories, Course, Level, Video, UserCourse, Payment, Questions, Test, Paper, Answer, Que, Contact, Ppr
+from home.models import Categories, Course, Level, Video, UserCourse, Payment, Questions, Test, Paper, Answer, Ans, Que, Result, Contact, Ppr
 from django.template.loader import render_to_string
 from django.http import JsonResponse
 from django.db.models import Sum
 from django.views.decorators.csrf import csrf_exempt
-from.forms import ExamChoiceFrm, AnsChoice
+from.forms import ExamChoiceFrm, AnsChoice, AnsnChoice
 from django.core import serializers
 from macn.settings import *
 import razorpay
@@ -180,34 +180,56 @@ def MY_TEST_SERIES_SLUG(request, slug):
     return render(request, "profile/online_test.html", context)
 
 def QUESTIONS(request, slug):
-    if request.method=='GET':
-        ppr = Ppr.objects.get(new_slug = slug)
+    ppr = Ppr.objects.get(new_slug = slug)
     print(ppr)
-    
     que = Que.objects.filter(ppr=ppr)
+    # print(que)
     paginator=Paginator(que, 1)
     page_number = request.GET.get('page', 1)
     que = paginator.get_page(page_number)
-    # print(que)
-    #  ..................
-    # all_que = Paginator(Que.objects.filter(ppr=ppr),1)
-    # page = request.GET.get('page')
-    # try:
-    #     que = all_que.page(page)
-    # except PageNotAnInteger:
-    #     que = all_que.page(1)
-    # except EmptyPage:
-    #     que = all_que.page(all_que.num_page)
-    # ..................
-    
-    
+    print(que)
+    print(page_number)
+    quen = Que.objects.filter(qs_no=page_number, ppr=ppr)[0]
+    print(quen)
+    if request.method=='POST':
+            getqs=Ans.objects.filter(que=quen, student=request.user, ppr=ppr).delete()
+            print(getqs) 
+            form=AnsnChoice(request.POST or None)
+            if form.is_valid():
+                quens = Que.objects.filter(qs_no=page_number, ppr=ppr)
+                for a in quens:
+                    print(a.answers)
+                ansn=form.cleaned_data.get('ansn')
+                print(ansn)
+                if ansn==a.answers:
+                    ans = Ans(student=request.user, que=quen, ppr=ppr, answer=ansn, score=1)
+                    ans.save()
+                elif ansn!=a.answers:
+                    ans = Ans(student=request.user, que=quen, ppr=ppr, answer=ansn, score=-1)
+                    ans.save()
+                else:
+                    ans = Ans(student=request.user, que=quen, ppr=ppr, answer=ansn, score=0)
+                    ans.save()
+    ansnfrm=AnsnChoice()
     context = {
-        
+        'ansnfrm' : ansnfrm,
         'ppr' : ppr,
         'que' :que,
-        # 'quefinal' : quefinal,
     }
     return render(request, "profile/question_n.html", context)
+
+def RESULT(request, slug):
+    ppr = Ppr.objects.filter(new_slug = slug)[0]
+    print(ppr)
+    correct_answer = Ans.objects.filter(ppr=ppr, score=1).count()
+    print(correct_answer)
+    wrong_answer = Ans.objects.filter(ppr=ppr, score=-1).count()
+    print(wrong_answer)
+    not_answer = Ans.objects.filter(ppr=ppr, score=0).count()
+    print(not_answer)
+    result = Result(student = request.user, ppr = ppr, correct_answer = correct_answer, wrong_answer = wrong_answer, not_answer = not_answer)
+    result.save()
+    return render(request, 'profile/result.html')
 
 
     

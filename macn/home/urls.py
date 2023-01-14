@@ -32,6 +32,7 @@ urlpatterns = [
     path('my-videos/<slug:slug>', views.MY_VIDEOS_SLUG, name="my_videos_slug"),
     path('my-e-books', views.MY_E_BOOKS, name="my_e-books"),
     path('my-e-books/<slug:slug>', views.MY_E_BOOKS_SLUG, name="my_e-books"),
+    path('result/<slug>', views.RESULT, name="result"),
     
 
     

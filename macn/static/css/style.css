@@ -44,6 +44,7 @@ qt-btn{
 	margin: auto;
 }
 .op_box{
+	
 	width: 80%;
 	height:200px;
 	margin: auto;
@@ -960,10 +961,12 @@ p {
 /*======================================*/
 
 @media (min-width:768px) and (max-width:991px) {
-#container.mainnav-lg #content-container, #container.mainnav-lg #footer,  {
+#container.mainnav-lg #content-container, #container.mainnav-lg #footer
+{
 	left: 220px
 }
-#container.mainnav-lg #fullwidth-footer, #container.mainnav-lg #fullwidth-container {
+#container.mainnav-lg #fullwidth-footer, #container.mainnav-lg #fullwidth-container
+{
 	left: 220px
 }
 #container.mainnav-lg .tgl-menu-btn {

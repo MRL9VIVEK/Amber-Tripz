@@ -5,4 +5,9 @@
 {% block title %} {{course.title}} My Test Series {% endblock title %}
 
 {% block content %}
+{% for i in result%}
+{{i.correct_answer}}
+{{i.wrong_answer}}
+{{i.not_answer}}
+{% endfor %}
 {% endblock %}

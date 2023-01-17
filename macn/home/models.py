@@ -154,10 +154,11 @@ class Que(models.Model):
 
 class Ans(models.Model):
     student = models.ForeignKey(User, on_delete=models.CASCADE)
+    que_no=models.IntegerField(default=1)
     que=models.ForeignKey(Que,on_delete=models.CASCADE)
     ppr=models.ForeignKey(Ppr,on_delete=models.CASCADE, null=True)
     answer=models.CharField(max_length=20)
-    
+    correct_answer=models.CharField(max_length=20, null=True)
     score=models.FloatField(default=0)
     # date=models.DateTimeField(auto_now_add=True)
     def __str__(self):

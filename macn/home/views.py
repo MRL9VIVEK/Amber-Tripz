@@ -181,16 +181,15 @@ def MY_TEST_SERIES_SLUG(request, slug):
 
 def QUESTIONS(request, slug):
     ppr = Ppr.objects.get(new_slug = slug)
-    print(ppr)
+    
     que = Que.objects.filter(ppr=ppr)
-    # print(que)
+    
     paginator=Paginator(que, 1)
     page_number = request.GET.get('page', 1)
     que = paginator.get_page(page_number)
-    print(que)
-    print(page_number)
+    
     quen = Que.objects.filter(qs_no=page_number, ppr=ppr)[0]
-    print(quen)
+    
     if request.method=='POST':
             getqs=Ans.objects.filter(que=quen, student=request.user, ppr=ppr).delete()
             print(getqs) 
@@ -199,16 +198,17 @@ def QUESTIONS(request, slug):
                 quens = Que.objects.filter(qs_no=page_number, ppr=ppr)
                 for a in quens:
                     print(a.answers)
+                    print(a.qs_no)
                 ansn=form.cleaned_data.get('ansn')
                 print(ansn)
                 if ansn==a.answers:
-                    ans = Ans(student=request.user, que=quen, ppr=ppr, answer=ansn, score=1)
+                    ans = Ans(student=request.user,que_no=a.qs_no, que=quen, ppr=ppr, answer=ansn, correct_answer=a.answers, score=1)
                     ans.save()
                 elif ansn!=a.answers:
-                    ans = Ans(student=request.user, que=quen, ppr=ppr, answer=ansn, score=-1)
+                    ans = Ans(student=request.user,que_no=a.qs_no, que=quen, ppr=ppr, answer=ansn, correct_answer=a.answers, score=-1)
                     ans.save()
                 else:
-                    ans = Ans(student=request.user, que=quen, ppr=ppr, answer=ansn, score=0)
+                    ans = Ans(student=request.user,que_no=a.qs_no, que=quen, ppr=ppr, answer=ansn, correct_answer=a.answers, score=0)
                     ans.save()
     ansnfrm=AnsnChoice()
     context = {
@@ -220,16 +220,24 @@ def QUESTIONS(request, slug):
 
 def RESULT(request, slug):
     ppr = Ppr.objects.filter(new_slug = slug)[0]
+    
     print(ppr)
-    correct_answer = Ans.objects.filter(ppr=ppr, score=1).count()
-    print(correct_answer)
-    wrong_answer = Ans.objects.filter(ppr=ppr, score=-1).count()
-    print(wrong_answer)
-    not_answer = Ans.objects.filter(ppr=ppr, score=0).count()
-    print(not_answer)
-    result = Result(student = request.user, ppr = ppr, correct_answer = correct_answer, wrong_answer = wrong_answer, not_answer = not_answer)
-    result.save()
-    return render(request, 'profile/result.html')
+    result = Result.objects.filter(student = request.user, ppr = ppr)
+    print(result)
+    if(result):
+        pass
+    else:
+        correct_answer = Ans.objects.filter(ppr=ppr, score=1).count()
+        wrong_answer = Ans.objects.filter(ppr=ppr, score=-1).count()
+        print(wrong_answer)
+        not_answer = Ans.objects.filter(ppr=ppr, score=0).count()
+        print(not_answer)
+        result = Result(student = request.user, ppr = ppr, correct_answer = correct_answer, wrong_answer = wrong_answer, not_answer = not_answer)
+        result.save()
+    context={
+        'result': result,
+    }
+    return render(request, 'profile/result.html', context)
 
 
     
@@ -248,7 +256,7 @@ def MY_VIDEOS_SLUG(request, slug):
     context = {
     'course' : course,
     }
-    return render(request, "profile/profile.html", context)
+    return render(request, "profile/my_videos_d.html", context)
 
 
 def MY_E_BOOKS(request):
@@ -268,7 +276,7 @@ def MY_E_BOOKS_SLUG(request, slug):
     context = {
     'course' : course,
     }
-    return render(request, "profile/profile.html", context)
+    return render(request, "profile/my_e-books_d.html", context)
 
 def CHECKOUT(request, slug):
     course = Course.objects.get(slug = slug)

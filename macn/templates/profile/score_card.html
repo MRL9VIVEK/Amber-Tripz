@@ -53,41 +53,27 @@ tr:hover {background-color: rgb(180, 215, 238);}
 
 <div class="container">
 <table>
+    
     <tr> 
-      <td>Amer Tripz</td>
-      <td>Correct Answer</td>
-      <td>Wrong Answer</td>
-      <td>Not Attempt</td>
-      <!-- <td>Total Score</td> -->
+      <td>Q. No</td>
+      <td>Correct Answertr</td>
+      <td>Your Answer</td>
+      
+      
     </tr>
     
-    
+                        {% for i in ans %}
     <tr> 
-      <td>Questions</td>
-      {% for i in result %}
+      <td>{{ i.que_no }}</td>
+     
+      <td>{{ i.answer }}</td>
       <td>{{i.correct_answer}}</td>
-      <td>{{i.wrong_answer}}</td>
-      <td>{{i.not_answer}}</td>
-      {% endfor %}
+      
+      
     </tr>
-    <tr> 
-        <td>Marks</td>
-        <td>Column 2</td>
-        <td>Column 3</td>
-        <td>Column 4</td>
+    {% endfor %}
+    
        
-      </tr>
-      <tr> 
-        <td>
-        Total Score
-    </td>
-        
-      </tr>
   </table>
 </div>
 {% endblock %}
-{% for i in result%}
-{{i.correct_answer}}
-{{i.wrong_answer}}
-{{i.not_answer}}
-{% endfor %}

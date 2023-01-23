@@ -181,6 +181,8 @@ def MY_TEST_SERIES_SLUG(request, slug):
 
 def QUESTIONS(request, slug):
     ppr = Ppr.objects.get(new_slug = slug)
+    print(ppr)
+    print(ppr.time_duration)
     
     que = Que.objects.filter(ppr=ppr)
     
@@ -192,7 +194,7 @@ def QUESTIONS(request, slug):
     
     if request.method=='POST':
             getqs=Ans.objects.filter(que=quen, student=request.user, ppr=ppr).delete()
-            print(getqs) 
+            
             form=AnsnChoice(request.POST or None)
             if form.is_valid():
                 quens = Que.objects.filter(qs_no=page_number, ppr=ppr)
@@ -219,8 +221,7 @@ def QUESTIONS(request, slug):
     return render(request, "profile/question_n.html", context)
 
 def RESULT(request, slug):
-    ppr = Ppr.objects.filter(new_slug = slug)[0]
-    
+    ppr = Ppr.objects.get(new_slug = slug)
     print(ppr)
     result = Result.objects.filter(student = request.user, ppr = ppr)
     print(result)
@@ -236,8 +237,21 @@ def RESULT(request, slug):
         result.save()
     context={
         'result': result,
+        'ppr': ppr,
     }
     return render(request, 'profile/result.html', context)
+
+
+def SCORE_CARD(request, slug):
+    
+    ppr = Ppr.objects.get(new_slug = slug)
+    print(ppr.title)
+    ans = Ans.objects.filter(student = request.user, ppr = ppr)
+    context={
+        'ans':ans,
+        'ppr' : ppr,
+    }
+    return render(request, 'profile/score_card.html', context)
 
 
     

@@ -33,6 +33,7 @@ urlpatterns = [
     path('my-e-books', views.MY_E_BOOKS, name="my_e-books"),
     path('my-e-books/<slug:slug>', views.MY_E_BOOKS_SLUG, name="my_e-books"),
     path('result/<slug>', views.RESULT, name="result"),
+    path('score_card/<slug>', views.SCORE_CARD, name="score_card"),
     
 
     

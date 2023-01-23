@@ -6,6 +6,12 @@
 
 {% block content %}
 
+<script>
+    
+    distance = 60 * 60 * 1000;
+    sessionStorage.setItem('distance', distance)
+</script>
+
 
 
  <!-- PAGE TITLE
@@ -59,7 +65,7 @@
                                     <a  href="/Questions/{{i.new_slug}}" style="border:4px solid rgba(var(--bs-gigas-rgb)); padding:4px; border-radius: 8px; color:white; background-color: rgba(var(--bs-gigas-rgb)); ">
                                         Start Test
                                     </a>
-                                    <a  href="/result/{{i.new_slug}}" style="border:4px solid rgba(var(--bs-gigas-rgb)); padding:4px; border-radius: 8px; color:white; background-color: rgba(var(--bs-gigas-rgb)); ">
+                                    <a  href="/score_card/{{i.new_slug}}" style="border:4px solid rgba(var(--bs-gigas-rgb)); padding:4px; border-radius: 8px; color:white; background-color: rgba(var(--bs-gigas-rgb)); ">
                                         View Result
                                     </a>
                     

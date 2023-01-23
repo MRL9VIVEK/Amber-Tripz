@@ -11,7 +11,26 @@
         </div>
         <div class="col-lg-3"></div>
         <div class="col-lg-0">
-            
+            <script>
+                
+                var x = setInterval(function() {
+                        distance=sessionStorage.getItem('distance')
+                        distance=distance-1000
+                        sessionStorage.setItem('distance',distance);        
+                    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                    document.getElementById("demo").innerHTML = minutes + "m " + seconds + "s ";
+                    if (distance < 600000) {
+                        
+                        document.getElementById("demo").style.color="red";
+                     }
+                     if(distance<0){
+                        clearInterval(x);
+                        document.getElementById("demo").innerHTML = "EXPIRED"
+                        // window.location.assign("{% url 'test_series'%}")
+                     }
+                    }, 1000);
+                </script>
             <div class="text"> Time :  <span id=demo></span></div></div>
     </div>
 
@@ -89,7 +108,7 @@
             <div><h3>Question</h3></div>
             <div class="row" style="float: left; margin-top: 20px; ">
                 {% for q in ppr.que_set.all %}
-                <div class="col-lg-3" style="margin-top: 30px; "> <a href="/Questions/ssc-cgl-practice-test-1?page={{q.qs_no}}" class="btn btn-success">{{q.qs_no}}</a> </div>
+                <div class="col-lg-3" style="margin-top: 30px; "> <a href="/Questions/{{ppr.new_slug}}?page={{q.qs_no}}" class="btn btn-success">{{q.qs_no}}</a> </div>
                 
                 {% endfor %}
             </div>

@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.shortcuts import render, redirect, HttpResponse
-from home.models import Categories, Course, Level, Video, UserCourse, Payment, Questions, Test, Paper, Answer, Ans, Que, Result, Contact, Ppr
+from home.models import Categories, Course, Level, Video, UserCourse, Payment, Questions, Test, Paper, Time, Answer, Ans, Que, Result, Contact, Ppr
 from django.template.loader import render_to_string
 from django.http import JsonResponse
 from django.db.models import Sum
@@ -42,7 +42,11 @@ def contact(request):
             pass
         else:
             contact.save()
-    return render(request, 'main/contact.html')
+    category = Categories.get_all_category(Categories)
+    context = {
+        'category' : category,
+    }
+    return render(request, 'main/contact.html', context)
 
 def about(request): 
     category = Categories.get_all_category(Categories)
@@ -145,52 +149,65 @@ def PAGE_NOT_FOUND(request):
 
 def MY_COURSE(request):
     course = UserCourse.objects.filter(user = request.user)
+    category = Categories.get_all_category(Categories)
     
     context = {
         'course': course,
-        
+        'category' : category,
     }
     return render(request,'course/my-course.html', context)
 
 
 def MY_COURSE_SLUG(request, slug):
     course = Course.objects.get(slug = slug)
+    category = Categories.get_all_category(Categories)
+    course_all = Course.objects.all()
     print(course)
     context = {
     'course' : course,
+    'category' : category,
+    'course_all': course_all,
     }
     return render(request, "profile/profile.html", context)
 
 def MY_TEST_SERIES(request):
     course = UserCourse.objects.filter(user = request.user)
+    category = Categories.get_all_category(Categories)
     
     context = {
         'course': course,
-        
+        'category' : category,
     }
     return render(request,'profile/my_test_series.html', context)
 
 
 def MY_TEST_SERIES_SLUG(request, slug):
     course = Course.objects.get(slug = slug)
-    print(course)
+    category = Categories.get_all_category(Categories)
     context = {
     'course' : course,
+    'category' : category,
     }
     return render(request, "profile/online_test.html", context)
 
 def QUESTIONS(request, slug):
     ppr = Ppr.objects.get(new_slug = slug)
-    print(ppr)
-    print(ppr.time_duration)
-    
     que = Que.objects.filter(ppr=ppr)
-    
     paginator=Paginator(que, 1)
     page_number = request.GET.get('page', 1)
     que = paginator.get_page(page_number)
-    
     quen = Que.objects.filter(qs_no=page_number, ppr=ppr)[0]
+    time = Time.objects.filter(student=request.user, ppr=ppr)
+    
+    if time:
+        pass
+    else:
+        time = Time(student=request.user,  ppr=ppr, time=ppr.time_duration * 60 * 1000)
+        time.save()
+    time_n = Time.objects.filter(student=request.user, ppr=ppr)
+    for i in time_n:
+        print(i.time)
+        
     
     if request.method=='POST':
             getqs=Ans.objects.filter(que=quen, student=request.user, ppr=ppr).delete()
@@ -217,6 +234,7 @@ def QUESTIONS(request, slug):
         'ansnfrm' : ansnfrm,
         'ppr' : ppr,
         'que' :que,
+        'time_n' : time_n,        
     }
     return render(request, "profile/question_n.html", context)
 
@@ -238,6 +256,7 @@ def RESULT(request, slug):
     context={
         'result': result,
         'ppr': ppr,
+        'time' : time
     }
     return render(request, 'profile/result.html', context)
 
@@ -257,28 +276,29 @@ def SCORE_CARD(request, slug):
     
 def MY_VIDEOS(request):
     course = UserCourse.objects.filter(user = request.user)
-    
+    category = Categories.get_all_category(Categories)
     context = {
         'course': course,
-        
+        'category': category,
     }
     return render(request,'profile/my_videos.html', context)
 
 def MY_VIDEOS_SLUG(request, slug):
     course = Course.objects.get(slug = slug)
-    print(course)
+    category = Categories.get_all_category(Categories)
     context = {
     'course' : course,
+    'category' : category,
     }
     return render(request, "profile/my_videos_d.html", context)
 
 
 def MY_E_BOOKS(request):
     course = UserCourse.objects.filter(user = request.user)
-    
+    category = Categories.get_all_category(Categories)
     context = {
         'course': course,
-        
+        'category': category,
     }
     return render(request,'profile/my_e-books.html', context)
 
@@ -286,9 +306,10 @@ def MY_E_BOOKS(request):
 
 def MY_E_BOOKS_SLUG(request, slug):
     course = Course.objects.get(slug = slug)
-    print(course)
+    category = Categories.get_all_category(Categories)
     context = {
     'course' : course,
+    'category' : category,
     }
     return render(request, "profile/my_e-books_d.html", context)
 

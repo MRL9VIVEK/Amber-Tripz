@@ -6,12 +6,11 @@
 
 {% block content %}
 
-<script>
+<!-- <script>
     
     distance = 60 * 60 * 1000;
     sessionStorage.setItem('distance', distance)
-</script>
-
+</script> -->
 
 
  <!-- PAGE TITLE
@@ -59,7 +58,7 @@
 
                                     <!-- Heading -->
                                     <div class="position-relative">
-                                        <a  class="d-block stretched-link"><h4 class="line-clamp-2 h-md-48 h-lg-58 me-md-6 me-lg-10 me-xl-4 mb-2">{{ i.title }}</h4></a>
+                                        <a  class="d-block stretched-link"><h4 class="line-clamp-2 h-md-48 h-lg-58 me-md-6 me-lg-10 me-xl-4 mb-2">{{ i.title }} </h4><div id="time">{{i.time_duration}}</div></a>
                                         
                                     </div>
                                     <a  href="/Questions/{{i.new_slug}}" style="border:4px solid rgba(var(--bs-gigas-rgb)); padding:4px; border-radius: 8px; color:white; background-color: rgba(var(--bs-gigas-rgb)); ">
@@ -77,5 +76,13 @@
             </div>
             
         </div>
-
+        <script>
+    
+            console.log("hello")
+              let time = document.getElementById('time')
+              console.log(time.textContent)
+              distance = time.textContent * 60 * 1000
+              console.log(distance)
+              sessionStorage.setItem('distance', distance)
+        </script>
 {% endblock %}

@@ -9,34 +9,44 @@
         <div class="col-lg-2">
             <div class="text">Email : {{user.email}}</div>
         </div>
-        <div class="col-lg-3"></div>
+        <div class="col-lg-3"><span id=demon></span></div>
         <div class="col-lg-0">
+
             <script>
-                
                 var x = setInterval(function() {
                         distance=sessionStorage.getItem('distance')
+                        
                         distance=distance-1000
                         sessionStorage.setItem('distance',distance);        
+                    var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                     var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
                     var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-                    document.getElementById("demo").innerHTML = minutes + "m " + seconds + "s ";
-                    if (distance < 600000) {
-                        
+                    document.getElementById("demo").innerHTML = hours + "h " + minutes + "m " + seconds + "s ";
+                    document.getElementById("demon").innerHTML = distance;
+                    $('#inp').val(distance)
+                    if(hours>0){
+                        document.getElementById("demo").innerHTML = hours + "h " + minutes + "m " + seconds + "s ";
+                    
+                    } else {
+                        document.getElementById("demo").innerHTML = minutes + "m " + seconds + "s ";
+                    
+                    }
+                    
+                    if (distance < 600000) {    
                         document.getElementById("demo").style.color="red";
+                        
                      }
                      if(distance<0){
                         clearInterval(x);
                         document.getElementById("demo").innerHTML = "EXPIRED"
-                        // window.location.assign("{% url 'test_series'%}")
+                        window.location.assign("{% url 'my_test_series'%}")
                      }
                     }, 1000);
                 </script>
-            <div class="text"> Time :  <span id=demo></span></div></div>
+            <div class="text"> Time : <span id=demo></span></div>
+            </div>
     </div>
-
 </div>
-
-
 <div class="q_body">
     <div class="row">
         <form action="" method="POST">{% csrf_token %}
@@ -98,8 +108,10 @@
             </div>
             
             
+        </br>
+            <input id="inp" type="text">
             
-            
+                    
         </div>
     </form>
     

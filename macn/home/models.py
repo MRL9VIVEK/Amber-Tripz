@@ -170,8 +170,15 @@ class Result(models.Model):
     correct_answer=models.FloatField(default=0)
     wrong_answer=models.FloatField(default=0)
     not_answer=models.FloatField(default=0)
+    
     def __str__(self):
-        
+        return self.student.username
+    
+class Time(models.Model):
+    student = models.ForeignKey(User, on_delete=models.CASCADE)
+    ppr=models.ForeignKey(Ppr,on_delete=models.CASCADE, null=True)
+    time = models.IntegerField(default=0)
+    def __str__(self):
         return self.student.username
 
         

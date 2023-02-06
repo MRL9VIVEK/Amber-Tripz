@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.shortcuts import render, redirect, HttpResponse
-from home.models import Categories, Course, Level, Video, UserCourse, Payment, Questions, Test, Paper, Time, Answer, Ans, Que, Result, Contact, Ppr
+from home.models import Categories, Course, Level, Video, UserCourse, Payment, Questions, Test, Paper, Time, Answer, Ans, Que, Result, Contact, Ppr, Subject
 from django.template.loader import render_to_string
 from django.http import JsonResponse
 from django.db.models import Sum
@@ -285,12 +285,25 @@ def MY_VIDEOS(request):
 
 def MY_VIDEOS_SLUG(request, slug):
     course = Course.objects.get(slug = slug)
+    print(course)
+    subject = Subject.objects.filter(course = course)
+    print(subject)
     category = Categories.get_all_category(Categories)
     context = {
     'course' : course,
     'category' : category,
+    'subject' : subject
     }
     return render(request, "profile/my_videos_d.html", context)
+
+def video_lecture(request, slug):
+    subject = Subject.objects.get(slug_s = slug)
+    print(subject)
+    context = {
+        'subject' : subject,
+    }
+    return render(request,"profile/my_videos_sub.html", context)
+
 
 
 def MY_E_BOOKS(request):
@@ -299,6 +312,7 @@ def MY_E_BOOKS(request):
     context = {
         'course': course,
         'category': category,
+
     }
     return render(request,'profile/my_e-books.html', context)
 
@@ -306,12 +320,29 @@ def MY_E_BOOKS(request):
 
 def MY_E_BOOKS_SLUG(request, slug):
     course = Course.objects.get(slug = slug)
+    subject = Subject.objects.filter(course = course)
+    print(subject)
     category = Categories.get_all_category(Categories)
     context = {
     'course' : course,
     'category' : category,
+    'subject' : subject
     }
     return render(request, "profile/my_e-books_d.html", context)
+
+
+def E_BOOK(request, slug):
+    subject = Subject.objects.get(slug_s = slug)
+    print(subject)
+    
+    context ={
+        'subject' : subject,
+    }
+    return render(request, "profile/e_book_sub.html", context)
+
+
+
+
 
 def CHECKOUT(request, slug):
     course = Course.objects.get(slug = slug)

@@ -17,6 +17,12 @@ class Ppr_TabularInline(admin.TabularInline):
 class Que_Inline(admin.TabularInline):
     model = Que
 
+class Video_Lecture_Inline(admin.TabularInline):
+    model = Video_Lecture
+
+class E_Book_Inline(admin.TabularInline):
+    model = E_Book
+
 
 class course_admin(admin.ModelAdmin):
     inlines = ( Course_Features_TabularInline, Requirements_TabularInline, Video_TabularInline, Ppr_TabularInline)
@@ -24,6 +30,12 @@ class course_admin(admin.ModelAdmin):
 class ppr_admin(admin.ModelAdmin):
     inlines = [
         Que_Inline
+    ]
+
+class subject_admin(admin.ModelAdmin):
+    inlines = [
+        Video_Lecture_Inline,
+        E_Book_Inline
     ]
 
 
@@ -48,3 +60,6 @@ admin.site.register(Que)
 admin.site.register(Ans)
 admin.site.register(Result)
 admin.site.register(Time)
+admin.site.register(Subject, subject_admin)
+admin.site.register(Video_Lecture)
+admin.site.register(E_Book)

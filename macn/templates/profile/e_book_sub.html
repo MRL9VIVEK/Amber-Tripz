@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+{%  load course_tags %}
+{% load course_tags %}
+
+{% block title %} {{course.title}} {% endblock title %}
+
+{% block content %}
+<div class="container pb-4 pb-xl-7">
+    {% include 'components/msg.html' %}
+    <div class="row row-cols-md-2 row-cols-xl-3 mb-6 mb-xl-3">
+        {% for learn in subject.e_book_set.all %}
+                    <div class="col-12 col-md-6 col-xl-4 col-wd-3 pb-4 pb-md-7" style="padding-right:15px;padding-left:15px;">
+                        <!-- Card -->
+                        <div class="card border shadow p-2 rounded-lg sk-fade">
+                          <div class="card-zoom position-relative">
+                                <a href="/{{ learn.book }}" target="_blank" class="card-img sk-thumbnail img-ratio-9 d-block">
+                                    <img class="rounded shadow-light-lg" src="/{{learn.thumbnail}}" alt="...">
+                                </a>
+                            </div>
+                            
+
+                            <!-- Footer -->
+                            <div class="card-footer px-2 pb-2 mb-1 pt-4 position-relative">
+                                
+
+                                <!-- Preheading -->
+
+                                <!-- Heading -->
+                                <div class="position-relative">
+                                    <a href="/{{ learn.book }}" target="_blank" class="d-block stretched-link"><h4 class="line-clamp-2 h-md-48 h-lg-58 me-md-6 me-lg-10 me-xl-4 mb-2">{{ learn.title }}</h4></a>
+                                    
+                                </div>
+                                
+                
+                
+                            </div>
+                        </div>
+                    </div>
+                     {% endfor %}
+        </div>
+        
+    </div>
+
+{% endblock %}

@@ -30,8 +30,11 @@ urlpatterns = [
     path('Questions/<slug>', views.QUESTIONS, name="questions"),
     path('my-videos', views.MY_VIDEOS, name="my_videos"),
     path('my-videos/<slug:slug>', views.MY_VIDEOS_SLUG, name="my_videos_slug"),
+    path('my-videos/video_lecture/<slug>', views.video_lecture, name="video_lecture"),
     path('my-e-books', views.MY_E_BOOKS, name="my_e-books"),
     path('my-e-books/<slug:slug>', views.MY_E_BOOKS_SLUG, name="my_e-books"),
+    path('my-e-books/e-book/<slug>', views.E_BOOK, name="e-book"),
+    
     path('result/<slug>', views.RESULT, name="result"),
     path('score_card/<slug>', views.SCORE_CARD, name="score_card"),
     

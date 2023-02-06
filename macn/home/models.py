@@ -122,6 +122,41 @@ class Video(models.Model):
 
     def __str__(self):
         return self.title
+    
+class Subject(models.Model):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    thumbnail = models.ImageField(upload_to="Media/subject", null=True)
+    subject_name = models.CharField(max_length=200)
+    title = models.CharField(max_length=300, null=True)
+    slug_s = AutoSlugField(populate_from='title', unique=True, null=True, default=None)
+    
+
+    def __str__(self):
+        return self.subject_name + " = " + self.course.title
+    
+    
+class Video_Lecture(models.Model):
+    serial_number = models.IntegerField(null=True)
+    thumbnail = models.ImageField(upload_to="Media/lecture", null=True)
+    course = models.ForeignKey(Course,on_delete=models.CASCADE, null=True)
+    subject = models.ForeignKey(Subject,on_delete=models.CASCADE, null=True)
+    title = models.CharField(max_length=300)
+    video = models.FileField(upload_to="Media/video", null=True)
+
+    def __str__(self):
+        return self.title
+    
+class E_Book(models.Model):
+    serial_number = models.IntegerField(null=True)
+    thumbnail = models.ImageField(upload_to="Media/lecture", null=True)
+    course = models.ForeignKey(Course,on_delete=models.CASCADE, null=True)
+    subject = models.ForeignKey(Subject,on_delete=models.CASCADE, null=True)
+    title = models.CharField(max_length=300)
+    book = models.FileField(upload_to="Media/book", null=True)
+
+    def __str__(self):
+        return self.title
+
 
 class Ppr(models.Model):
     serial_number = models.IntegerField(null=True)

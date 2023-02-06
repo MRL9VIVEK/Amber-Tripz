@@ -190,6 +190,33 @@ def MY_TEST_SERIES_SLUG(request, slug):
     }
     return render(request, "profile/online_test.html", context)
 
+def instructions(request, slug):
+    ppr = Ppr.objects.get(new_slug = slug)
+    print(ppr)
+    context = {
+        'ppr' : ppr,
+    }
+    return render(request, "test/instructions.html", context)
+
+def Question(request, slug):
+    ppr = Ppr.objects.get(new_slug = slug)
+    print(ppr)
+    print(ppr.course)
+    subject = Subject.objects.filter(course = ppr.course)
+    print(subject)
+    que = Que.objects.filter(course = ppr.course, ppr = ppr)
+    print(que)
+    paginator=Paginator(que, 1)
+    page_number = request.GET.get('que', 1)
+    que = paginator.get_page(page_number)
+    
+    context = {
+        'subject' : subject,
+        'ppr' : ppr,
+        'que' : que,
+    }
+    return render(request, "test/question.html", context)
+
 def QUESTIONS(request, slug):
     ppr = Ppr.objects.get(new_slug = slug)
     que = Que.objects.filter(ppr=ppr)

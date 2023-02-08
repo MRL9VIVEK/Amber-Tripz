@@ -31,6 +31,7 @@ def contact(request):
     
     if request.method=="POST":
         name = request.POST.get('name')
+        print(name)
         
         emailn = request.POST.get('email')
         message = request.POST.get('message')
@@ -184,38 +185,81 @@ def MY_TEST_SERIES(request):
 def MY_TEST_SERIES_SLUG(request, slug):
     course = Course.objects.get(slug = slug)
     category = Categories.get_all_category(Categories)
+    time = Time.objects.filter(student = request.user, course = course)
     context = {
     'course' : course,
     'category' : category,
+    'time' : time,
     }
     return render(request, "profile/online_test.html", context)
 
 def instructions(request, slug):
     ppr = Ppr.objects.get(new_slug = slug)
-    print(ppr)
+    subject = Subject.objects.filter(course = ppr.course) 
+    time = Time.objects.filter(student = request.user, course = ppr.course, ppr = ppr)
+    if time :
+        pass
+        
+    else:
+        time = Time(student = request.user, course = ppr.course, ppr = ppr, time = ppr.time_duration)
+        time.save()
     context = {
         'ppr' : ppr,
+        'time' : time,
+        'subject' : subject,
     }
     return render(request, "test/instructions.html", context)
 
 def Question(request, slug):
     ppr = Ppr.objects.get(new_slug = slug)
     print(ppr)
-    print(ppr.course)
     subject = Subject.objects.filter(course = ppr.course)
     print(subject)
     que = Que.objects.filter(course = ppr.course, ppr = ppr)
     print(que)
     paginator=Paginator(que, 1)
-    page_number = request.GET.get('que', 1)
+    page_number = request.GET.get('page', 1)
     que = paginator.get_page(page_number)
-    
+    ansnfrm=AnsnChoice()
+    if request.method=="POST":
+        ansn = request.POST.get('ansn')
+        
+        quen = Que.objects.get(course = ppr.course, ppr = ppr, qs_no = page_number)
+        
+        if ansn == quen.answers:
+            s=1
+        elif ansn != quen.answers:
+            s= -1
+        else :
+            s=0
+        
+        ans = Ans(student=request.user, course = ppr.course, ppr=ppr, que_no = quen.qs_no, que = quen, answer=ansn, correct_answer = quen.answers, score=s)
+        ans.save()
     context = {
         'subject' : subject,
         'ppr' : ppr,
         'que' : que,
+        'ansnfrm' : ansnfrm,
     }
     return render(request, "test/question.html", context)
+
+def SUBMIT(request, slug):
+    ppr = Ppr.objects.get(new_slug = slug)
+    time = Time.objects.filter(student = request.user, course = ppr.course, ppr=ppr).delete()
+    time = Time(student = request.user, course = ppr.course, ppr=ppr, time = 0 )
+    
+    time.save()
+    correct_answer = Ans.objects.filter(student = request.user, course = ppr.course, ppr=ppr, score = 1).count()
+    wrong_answer = Ans.objects.filter(student = request.user, course = ppr.course, ppr=ppr, score = -1).count()
+    not_answer = Ans.objects.filter(student = request.user, course = ppr.course, ppr=ppr, score = 0).count()
+    result = Result(student = request.user, course = ppr.course, ppr=ppr, correct_answer= correct_answer, wrong_answer = wrong_answer, not_answer = not_answer)
+    result.save()
+    print(result)
+    context = {
+        'result' : result,
+    }
+    return render(request, "test/submit.html", context)
+    
 
 def QUESTIONS(request, slug):
     ppr = Ppr.objects.get(new_slug = slug)

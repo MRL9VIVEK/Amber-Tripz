@@ -189,10 +189,11 @@ class Que(models.Model):
 
 class Ans(models.Model):
     student = models.ForeignKey(User, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course,on_delete=models.CASCADE, null= True)
+    ppr=models.ForeignKey(Ppr,on_delete=models.CASCADE, null=True)
     que_no=models.IntegerField(default=1)
     que=models.ForeignKey(Que,on_delete=models.CASCADE)
-    ppr=models.ForeignKey(Ppr,on_delete=models.CASCADE, null=True)
-    answer=models.CharField(max_length=20)
+    answer=models.CharField(max_length=20, null=True)
     correct_answer=models.CharField(max_length=20, null=True)
     score=models.FloatField(default=0)
     # date=models.DateTimeField(auto_now_add=True)
@@ -201,17 +202,19 @@ class Ans(models.Model):
 
 class Result(models.Model):
     student = models.ForeignKey(User, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course,on_delete=models.CASCADE, null=True)
     ppr=models.ForeignKey(Ppr,on_delete=models.CASCADE, null=True)
-    correct_answer=models.FloatField(default=0)
-    wrong_answer=models.FloatField(default=0)
-    not_answer=models.FloatField(default=0)
+    correct_answer=models.IntegerField(default=0)
+    wrong_answer=models.IntegerField(default=0)
+    not_answer=models.IntegerField(default=0)
     
     def __str__(self):
         return self.student.username
     
 class Time(models.Model):
     student = models.ForeignKey(User, on_delete=models.CASCADE)
-    ppr=models.ForeignKey(Ppr,on_delete=models.CASCADE, null=True)
+    course = models.ForeignKey(Course,on_delete=models.CASCADE, null= True)
+    ppr = models.ForeignKey(Ppr,on_delete=models.CASCADE, null=True)
     time = models.IntegerField(default=0)
     def __str__(self):
         return self.student.username

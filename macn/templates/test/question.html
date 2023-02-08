@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ppr.title}} </title>
     <style>
-        .container{
-            display:grid;
+        .container {
+            display: grid;
             background-color: whitesmoke;
             /* height:500px; */
             /* width:600px; */
@@ -20,115 +21,130 @@
             grid-template-columns: 1fr 1fr 1fr 1fr;
             grid-template-rows: 70px 80px 175px 225px 80px;
             /* justify-content:space-evenly; */
-            
+
         }
-        *{
+
+        * {
             padding: 0;
             margin: 0;
         }
-        .box{
+
+        .box {
             background-color: whitesmoke;
             border: 2px solid rgb(192, 180, 247);
-            
+
             /* text-align: center; */
         }
-        .box1{
+
+        .box1 {
             grid-column-start: 1;
             grid-column-end: 2;
             background-color: #6161ea;
-            color:white;
+            color: white;
             display: flex;
             justify-content: center;
             align-items: center;
         }
-        .boxt{
-            display:flex;
+
+        .boxt {
+            display: flex;
             align-items: center;
             grid-column-start: 2;
             grid-column-end: 4;
             background-color: #6161ea;
-            color:white;
+            color: white;
             padding: 10px;
         }
-        .boxl{
-            
+
+        .boxl {
+
             grid-column-start: 4;
             grid-column-end: 5;
             background-color: #6161ea;
-            color:white;
+            color: white;
             display: flex;
             /* justify-content: center; */
             align-items: center;
             padding: 10px;
-            
+
         }
-        .box2{
+
+        .box2 {
             grid-column-start: 1;
             grid-column-end: 4;
-            display:flex;
+            display: flex;
             justify-content: space-around;
             align-content: center;
             align-items: center;
-            
-            
+
+
         }
-        .box3{
-            display:flex;
+
+        .box3 {
+            display: flex;
             justify-content: center;
             align-items: center;
 
         }
-        .box4{
+
+        .box4 {
             grid-column-start: 1;
             grid-column-end: 4;
-            grid-row-start:3;
-            grid-row-end:5;
+            grid-row-start: 3;
+            grid-row-end: 5;
         }
-        .box7{
+
+        .box7 {
             grid-column-start: 1;
             grid-column-end: 4;
         }
-        .sub{
+
+        .sub {
             display: flex;
             /* border : 2px solid black; */
             background-color: #6161ea;
-            color:white;
+            color: white;
             justify-content: center;
             align-items: center;
-            margin:3px;
+            margin: 3px;
 
             padding-left: 10px;
             padding-right: 10px;
             height: 40px;
         }
-        .box4{
-            padding:10px;
+
+        .box4 {
+            padding: 10px;
             font-size: 20px;
-            margin:10px;
-            overflow:auto;
+            margin: 10px;
+            overflow: auto;
         }
-        .box5{
-            display:grid;
+
+        .box5 {
+            display: grid;
             grid-template-columns: 50px auto;
             grid-template-rows: auto auto;
             text-align: center;
             /* justify-content: center; */
-            
+
         }
-        .attb{
-            display:flex;
+
+        .attb {
+            display: flex;
             justify-content: center;
             align-items: center;
             /* border: 2px solid black; */
-            border-radius:50%;
+            border-radius: 50%;
             margin: 5px;
-            color:white;
+            color: white;
         }
-        .att{
+
+        .att {
             margin: 5px;
         }
-        .que{
-            display:grid;
+
+        .que {
+            display: grid;
             /* border: 2px solid black; */
             grid-template-columns: 30px 30px 30px 30px;
             grid-template-rows: auto auto;
@@ -136,154 +152,182 @@
             justify-content: space-around;
             grid-row-gap: 20px;
             /* overflow: auto; */
-            
-            
+
+
         }
-        .no{
-            
+
+        /* .no {
+
             border-radius: 50%;
             background-color: white;
             font-size: larger;
-            padding:5px;
-        }
-        .box7{
-            display:flex;
-            
+            padding: 5px;
+        } */
+
+        .box7 {
+            display: flex;
+
             align-items: center;
         }
-        .box8{
+
+        .box8 {
             display: flex;
             justify-content: center;
             align-items: center;
-            
+
         }
-        .status{
+
+        /* .status {
             display: flex;
             justify-content: center;
             align-items: center;
             background-color: rgb(192, 44, 113);
-            padding: 15px; 
-            color:white;
+            padding: 15px;
+            color: white;
             margin: 5px;
+
+        } */
+        .btn {
+            font-size: 12px;
+            width: 30px;
+            height: 30px;
+            border: 1px solid white;
+            border-radius: 50%;
+            background-color: white;
+            font-size: large;
+        }
+
+        .btn1 {
+            font-size: large;
+            padding: 10px;
+            margin: 10px;
+            background-color: rgb(192, 44, 113);
+            color: white;
 
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <div class="box box1">Amber Tripz</div>
-        <div class="box boxt">{{ppr.title}}</div>
-        <div class="box boxl">{{user.first_name}} {{user.last_name}}
-            <br>
-            {{user.email}}
-        </div>
 
-        <div class="box box2">
-            {% for sub in subject %}
-            <div class="sub">{{sub.subject_name}}</div>
-            {% endfor %}
-            
-        </div>
-        <script>
-            var x = setInterval(function() {
-                    distance=sessionStorage.getItem('distance')
-                    
-                    distance=distance-1000
-                    sessionStorage.setItem('distance',distance);        
-                var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-                if(hours > 0){
-        document.getElementById("demo").innerHTML = hours + "h.  " + minutes + "m.  " + seconds + "s. ";
-        } else {
-            document.getElementById("demo").innerHTML = minutes + "m.  " + seconds + "s. ";
-        }
-                document.getElementById("demon").innerHTML = distance;
-                $('#inp').val(distance)
-                // if(hours>0){
-                //     document.getElementById("demo").innerHTML = hours + "h " + minutes + "m " + seconds + "s ";
-                
-                // } else {
-                //     document.getElementById("demo").innerHTML = minutes + "m " + seconds + "s ";
-                
-                // }
-                
-                if (distance < 600000) {    
-                    document.getElementById("demo").style.color="red";
-                    
-                 }
-                 if(distance<0){
-                    clearInterval(x);
-                    document.getElementById("demo").innerHTML = "EXPIRED"
-                    window.location.assign("{% url 'my_test_series'%}")
-                 }
+<body>
+    <form action="" method="POST" >{% csrf_token %}
+        <div class="container">
+            <div class="box box1">Amber Tripz</div>
+            <div class="box boxt">{{ppr.title}}</div>
+            <div class="box boxl">{{user.first_name}} {{user.last_name}}
+                <br>
+                {{user.email}}
+            </div>
+
+            <div class="box box2">
+                {% for sub in subject %}
+                <div class="sub">{{sub.subject_name}}</div>
+                {% endfor %}
+
+            </div>
+            <script>
+                var x = setInterval(function () {
+                    distance = sessionStorage.getItem('distance')
+
+                    distance = distance - 1000
+                    sessionStorage.setItem('distance', distance);
+                    var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                    if (minutes > 0 && hours > 0) {
+                        document.getElementById("leo").innerHTML = hours + "h " + minutes + "m " + seconds + "s ";
+                    }
+                    else if (hours == 0 && minutes > 0) {
+                        document.getElementById("leo").innerHTML = minutes + "m " + seconds + "s ";
+                    }
+                    else {
+                        document.getElementById("leo").innerHTML = seconds + "s ";
+                    }
+                    if (distance < 600000) {
+
+                        document.getElementById("leo").style.color = "red";
+                    }
+                    if (distance < 0) {
+                        clearInterval(x);
+                        document.getElementById("leo").innerHTML = "EXPIRED"
+                        // window.location.assign("/submit/{{ppr.new_slug}}")
+                    }
                 }, 1000);
             </script>
-        <div class="box box3">Time Left : &nbsp<span id=demo></span></div>
-        <div class="box box4" style="padding:6px;">
-            {% for q in que %}
-            <div>
-                {{ q.questions }}
-             </div>
-        {% endfor %}
-        <br>
-        <br>
+            <div class="box box3">Time Left : &nbsp<span id=leo></span></div>
+            <form action="">
+                <div class="box box4" style="padding:20px;">
+                    {% for q in que %}
+                    <div>
+                        Que.{{ q.qs_no }}.&emsp;&emsp;{{ q.questions }}
 
-        <div>64/7 days</div>
-        <br>
-        <div>8 days</div>
-        <br>
-        <div>32/7 days</div>
-        <br>
-        <div>128/7 days</div>
+
+                    </div>
+
+                    <br>
+                    <br>
+
+                    <div>{{ansnfrm.ansn.0}}.&emsp;&emsp;{{ q.option_a }}</div>
+                    <br>
+                    <div>{{ansnfrm.ansn.1}}.&emsp;&emsp; {{ q.option_b }}</div>
+                    <br>
+                    <div>{{ansnfrm.ansn.2}}.&emsp;&emsp; {{ q.option_c }}</div>
+                    <br>
+                    <div>{{ansnfrm.ansn.3}}.&emsp;&emsp; {{ q.option_d }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="box box5">
+                    <div class="attb" style="background-color: green ;">1</div>
+                    <div class="att">Answered</div>
+                    <div class="attb" style="background-color: rgb(201, 45, 110) ;">2</div>
+                    <div class="att">Not Answered</div>
+                    <div class="attb" style="background-color: rgb(69, 70, 69);">3</div>
+                    <div class="att">Not Visited</div>
+                    <div class="attb" style="background-color: rgb(59, 19, 167) ;">4</div>
+                    <div class="att">Mark For Review</div>
+
+                </div>
+                <div class="box" style="background-color: rgb(190, 241, 241); overflow:auto;">
+                    <br>
+                    <div style="margin-left: 10px;">Choose a Question:</div>
+                    <br>
+                    <div class="que">
+                        {% for q in ppr.que_set.all %}
+                        <div class="no"><a href="/Question/{{ppr.new_slug}}?page={{q.qs_no}}"><input type="button"
+                                    class="btn" value="{{q.qs_no}}" /></a></div>
+                        {% endfor %}
+                        <!-- <a href="google.com"><button class="btn">1</button></a> -->
+                    </div>
+                </div>
+                <div class="box box7" style="justify-content: space-around;">
+                    <div class="status"><input type="button" class="btn1" value="Clear Response" /></div>
+                    <div class="status">
+                        
+                        <button type="submit"
+                                class="btn1"> Save</button>
+                        
+                    </div>
+                    
+                    <div class="status">
+                        {% if que.has_next %}
+                        <a href="/Question/{{ppr.new_slug}}?page={{que.next_page_number}}"><input type="button"
+                                class="btn1" value="Next" /></a>
+                    </div>
+                    {% else %}
+                    <a href="/Question/{{ppr.new_slug}}?page=1"><input type="button" class="btn1"
+                            value="Next" /></a>
+                </div>
+                {% endif %}
+                <input id="inp" type="text">
         </div>
-        <div class="box box5">
-            <div class="attb" style="background-color: green ;">1</div>
-            <div class="att">Answered</div>
-            <div class="attb" style="background-color: rgb(201, 45, 110) ;">2</div>
-            <div class="att">Not Answered</div>
-            <div class="attb" style="background-color: rgb(69, 70, 69);">3</div>
-            <div class="att">Not Visited</div>
-            <div class="attb" style="background-color: rgb(59, 19, 167) ;">4</div>
-            <div class="att">Mark For Review</div>
-            
-        </div>
-        <div class="box" style="background-color: rgb(190, 241, 241); overflow:auto;">
-            <br>
-            <div style="margin-left: 10px;">Choose a Question:</div>
-            <br>
-            <div class="que">
-                <div class="no">1</div>
-                <div class="no">2</div>
-                <div class="no">3</div>
-                <div class="no">4</div>
-                <div class="no">5</div>
-                <div class="no">6</div>
-                <div class="no">7</div>
-                <div class="no">8</div>
-                <div class="no">9</div>
-                <div class="no">10</div>
-                <div class="no">11</div>
-                <div class="no">12</div>
-                <div class="no">13</div>
-                <div class="no">14</div>
-                <div class="no">15</div>
-                <div class="no">11</div>
-                <div class="no">12</div>
-                <div class="no">13</div>
-                <div class="no">14</div>
-                <div class="no">15</div>
-                 </div>
-        </div>
-        <div class="box box7" >
-            <div class="status">Clear Response</div>
-            <div class="status">Mark For Review and Next</div>
-            <div class="status">Save and Next</div>
-        </div>
-        <div class="box box8">
-            <div style="background-color: rgb(192, 44, 113);padding: 15px; color:white;">Submit</div>
-        </div> 
-         
+    </form>
+    <div class="box box8">
+         <div><a href="/submit/{{ppr.new_slug}}"><input type="button" class="btn1" value="Submit" /></a></div>
+
     </div>
+
+    </div>
+
 </body>
+
 </html>

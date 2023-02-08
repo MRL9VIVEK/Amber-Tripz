@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .container{
+            display:flex;
+            justify-content: center;
+            
+            
+        }
+        .box{
+            display: grid;
+            grid-template-columns: 1fr 1fr ;
+            grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+            
+            background-color: azure;
+            border: 1px solid black;
+            margin-top: 100px;
+            width:700px;
+            height:200px;
+        }
+        .b1{
+            border: 1px solid black;
+            
+        }
+        .box1 {
+            grid-column-start: 1;
+            grid-column-end: 3;
+            display:flex;
+            justify-content: space-around;
+            align-items: center;
+            font-weight: bold;
+            font-size: larger;
+        }
+        .boxl{
+            
+            font-weight: bold;
+            font-size: large;
+            
+        }
+        .boxd{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="box">
+            <div class="b1 box1">
+                <div>{{request.user}}</div>
+                <div>{{result.course}}</div>
+                <div>{{result.ppr}}</div>
+            </div>
+            <div class="b1 boxd">Correct Answer</div>
+            <div class="b1 boxd">{{result.correct_answer}}</div>
+            <div class="b1 boxd">Wrong Answer</div>
+            <div class="b1 boxd">{{result.wrong_answer}}</div>
+            <div class="b1 boxd">Not Answer</div>
+            <div class="b1 boxd">{{result.not_answer}}</div>
+            <div class="b1 boxd boxl">Total score</div>
+            <div class="b1 boxd boxl">1</div>
+            
+        </div>
+    </div>
+</body>
+</html>

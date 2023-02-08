@@ -81,7 +81,7 @@
         <div class="inst border">General Awareness</div>
         <div class="inst border">25</div>
         <div class="inst border">50</div>
-        <div class="inst time border"><span id="time"> {{ppr.time_duration}} </span> &nbsp min.</div>
+        <div class="inst time border"><span id="time"> {{time.time}} </span> &nbsp min.</div>
         <div class="inst border">English</div>
         <div class="inst border">25</div>
         <div class="inst border">50</div>
@@ -92,6 +92,7 @@
         <div class="inst border">25</div>
         <div class="inst border">50</div>
         <div class="rule">
+       
         1. You have 30 minutes to complete the <br>
         2. The test contain 30 questons and 60 marks.<br>
         3. There is only one correct answer to each question. Click on the most appropriate option to mark it as your answer.4. You will be awarded 2 for each correct answer.<br>
@@ -103,9 +104,11 @@
         10. Do not click the button "Submit Test" before completing the test. A test once submitted cannot be resumed. <br>
         </div>
     </div>
+    
     <br>
     <br>
 <div>
+    
     <br>
     <br>
     <br>
@@ -116,7 +119,7 @@
     <br>
     <br>
     
-    <a href="Question/{{ppr.new_slug}}">
+    <a href="/Question/{{ppr.new_slug}}" target="_blank">
     <button disabled="true" id="btn" class="bt1">Start Test</button>
 </a>
     <button class="bt1">Cancel</button>

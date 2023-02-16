@@ -1,0 +1,102 @@
+<script>
+
+$("#clear").click(function () {
+        console.log("clear")
+        $("form")[0].reset();
+        
+    })
+
+    $(".btn_que").click(function () {
+
+        let id = $(this).attr("data-sid");
+
+        // console.log(typeof id);
+        let que = parseInt(id);
+        // console.log(typeof que);
+        let op_a = document.getElementById('aaa')
+        let op_b = document.getElementById('bbb')
+        let op_c = document.getElementById('ccc')
+        let op_d = document.getElementById('ddd')
+
+        let paper = document.getElementById('ppr')
+
+        <!-- console.log(ppr.textContent) -->
+
+
+
+        let csr = $("input[name=csrfmiddlewaretoken]").val();
+        mydata = { sid: que, ppr: ppr.textContent, csrfmiddlewaretoken: csr };
+        // console.log(mydata);
+
+        $.ajax({
+            url: "{% url 'number' %}",
+            method: "POST",
+            data: mydata,
+            success: function (data) {
+                $("#q_no").html(data.qs_no);
+                $("#qst").html(data.questions);
+                $("#aaa").html(op_a.innerHTML);
+                $("#ans_a").html(data.option_a);
+                $("#bbb").html(op_b.innerHTML);
+                $("#ans_b").html(data.option_b);
+                $("#ccc").html(op_c.innerHTML);
+                $("#ans_c").html(data.option_c);
+                $("#ddd").html(op_d.innerHTML);
+                $("#ans_d").html(data.option_d);
+            }
+        })
+    });
+
+
+    $("#btnnext").click(function () {
+        
+        let answer = document.getElementsByName('ansn');
+        var i;
+        for(i=0; i<answer.length; i++){
+           if(answer[i].checked){
+               
+               option = answer[i].value
+            }
+
+        }
+        
+        let qs_no = document.getElementById('q_no')
+        let id = parseInt(qs_no.innerHTML);
+        let q_no = id + 1;
+        let paper = document.getElementById('ppr')
+        let op_a = document.getElementById('aaa')
+        let op_b = document.getElementById('bbb')
+        let op_c = document.getElementById('ccc')
+        let op_d = document.getElementById('ddd')
+        // console.log(id)
+        // console.log(option)
+        let csr = $("input[name=csrfmiddlewaretoken]").val();
+        mydata = { sid: q_no, ppr: ppr.innerHTML, que: id, ans: option, csrfmiddlewaretoken: csr };
+        $.ajax({
+            url: "{% url 'next' %}",
+            method: "POST",
+            data: mydata,
+            success: function (data) {
+                //console.log(data.answer_n)
+
+                $("#q_no").html(data.qs_no);
+
+                $("#qst").html(data.questions);
+                $("#aaa").html(op_a.innerHTML);
+                $("#ans_a").html(data.option_a);
+                $("#bbb").html(op_b.innerHTML);
+                $("#ans_b").html(data.option_b);
+                $("#ccc").html(op_c.innerHTML);
+                $("#ans_c").html(data.option_c);
+                $("#ddd").html(op_d.innerHTML);
+                $("#ans_d").html(data.option_d);
+            }
+
+        });
+
+    })
+
+
+    
+
+</script>

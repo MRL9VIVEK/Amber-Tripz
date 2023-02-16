@@ -7,6 +7,7 @@ from django.db.models import Sum
 from django.views.decorators.csrf import csrf_exempt
 from.forms import ExamChoiceFrm, AnsChoice, AnsnChoice
 from django.core import serializers
+from django.http import JsonResponse
 from macn.settings import *
 import razorpay
 from time import time
@@ -31,14 +32,14 @@ def contact(request):
     
     if request.method=="POST":
         name = request.POST.get('name')
-        print(name)
+        # print(name)
         
         emailn = request.POST.get('email')
         message = request.POST.get('message')
         contact = Contact(name=name, email=emailn, desc=message)
-        print(emailn)
+        # print(emailn)
         emailo= Contact.objects.filter(email=emailn)
-        print(emailo)
+        # print(emailo)
         if emailo:
             pass
         else:
@@ -212,11 +213,12 @@ def instructions(request, slug):
 
 def Question(request, slug):
     ppr = Ppr.objects.get(new_slug = slug)
-    print(ppr)
+    # print(ppr)
     subject = Subject.objects.filter(course = ppr.course)
-    print(subject)
+    # print(subject)
     que = Que.objects.filter(course = ppr.course, ppr = ppr)
-    print(que)
+    # print(que)
+    q = Que.objects.filter(course = ppr.course, ppr = ppr)
     paginator=Paginator(que, 1)
     page_number = request.GET.get('page', 1)
     que = paginator.get_page(page_number)
@@ -240,8 +242,69 @@ def Question(request, slug):
         'ppr' : ppr,
         'que' : que,
         'ansnfrm' : ansnfrm,
+        'q' : q,
     }
     return render(request, "test/question.html", context)
+
+def number_que(request):
+
+    if request.method == 'POST':
+        sid = request.POST['sid']
+        print(sid)
+        ppr = request.POST['ppr']
+        print(ppr)
+        ppr = Ppr.objects.get(title = ppr)
+        print(ppr.title)
+        print(ppr.course)
+        que = Que.objects.get(course = ppr.course, ppr = ppr, qs_no = sid)
+        print(que)
+        quen = {"qs_no" : que.qs_no, "questions" : que.questions, "option_a" : que.option_a, "option_b" : que.option_b, "option_c" : que.option_c, "option_d" : que.option_d}
+        ansnfrm=AnsnChoice()
+        print(ansnfrm)
+        ans = list(ansnfrm)
+        print(ans)
+        # que = Que.objects.values().filter(course = ppr.course, ppr = ppr, qs_no = sid)
+        # que_n = list(que)
+        # print(que_n)
+        return JsonResponse(quen)
+    else:
+        return JsonResponse({'status': 0})
+        
+        # que_detail = {"qs_no": que.qs_no, "course": que.course, "ppr": que.ppr, "questions": que.questions, "answers":que.answers, "option_a": que.option_a, "option_b": que.option_b, "option_c": que.option_c, "option_d": que.option_d, "disc": que.disc}
+        # return JsonResponse(que_detail)
+
+
+def next_que(request):
+    if request.method == 'POST':
+        sid = request.POST['sid']
+        ppr = request.POST['ppr']
+        que_n = request.POST['que']
+        opt_v = request.POST['ans']
+        # print(que_n)
+        # print(opt_v)
+        ppr = Ppr.objects.get(title = ppr)
+        que_a =Que.objects.get(course = ppr.course, ppr = ppr, qs_no = que_n)
+        # print(que_a.answers)
+        # print(que_a)
+        getqs=Ans.objects.filter(student=request.user, course = ppr.course, ppr=ppr, que_no=que_n).delete()
+        ans = Ans(student=request.user, course = ppr.course, ppr=ppr, que_no=que_n, que=que_a, answer=opt_v, correct_answer=que_a.answers, score=1)
+        ans.save()
+        que_count = Que.objects.filter(course = ppr.course, ppr = ppr).count()
+        id = int(sid)
+        if id <= que_count :
+            sid = id
+        else:
+            sid = 1
+        # print(ppr.course)
+        que = Que.objects.get(course = ppr.course, ppr = ppr, qs_no = sid)
+        # answer = Ans.objects.filter(student=request.user, course = ppr.course, ppr=ppr, que_no=sid)
+        # print(answer)
+        # print(que)
+        quen = {"qs_no" : que.qs_no, "questions" : que.questions, "option_a" : que.option_a, "option_b" : que.option_b, "option_c" : que.option_c, "option_d" : que.option_d}
+        # answer_n = {"answer": answer}
+        return JsonResponse(quen)
+    else:
+        return JsonResponse({'status': 0})
 
 def SUBMIT(request, slug):
     ppr = Ppr.objects.get(new_slug = slug)

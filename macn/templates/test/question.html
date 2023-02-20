@@ -230,8 +230,10 @@
 
             </div>
             <script>
+                distance = 60 * 60 * 1000
                 var x = setInterval(function () {
-                    distance = sessionStorage.getItem('distance')
+                    // distance = sessionStorage.getItem('distance')
+                    
 
                     distance = distance - 1000
                     sessionStorage.setItem('distance', distance);
@@ -251,6 +253,7 @@
 
                         document.getElementById("leo").style.color = "red";
                     }
+                    $('#inp').val(distance)
                     if (distance < 0) {
                         clearInterval(x);
                         document.getElementById("leo").innerHTML = "EXPIRED"
@@ -269,15 +272,19 @@
                     </div>
 
                     <br>
-                    <br>
+                    
 
-                    <div><span id="aaa">{{ansnfrm.ansn.0}}</span>.&emsp;&emsp;<span  id="ans_a">{{ q.option_a }}</span></div>
-                    <br>
-                    <div><span id="bbb">{{ansnfrm.ansn.1}}</span>.&emsp;&emsp; <span id="ans_b" > {{ q.option_b }}</span></div>
-                    <br>
-                    <div><span id="ccc">{{ansnfrm.ansn.2}}</span>.&emsp;&emsp; <span id="ans_c">{{ q.option_c }}</span> </div>
-                    <br>
-                    <div><span id="ddd">{{ansnfrm.ansn.3}}</span>.&emsp;&emsp; <span id="ans_d">{{ q.option_d }}</span></div>
+                    <!-- <div><span class="aaa">{{ansnfrm.ansn.0}}</span>.&emsp;&emsp;<span  id="ans_a">{{ q.option_a }}</span></div> -->
+                    <!-- <br> -->
+                    <!-- <div><span class="bbb">{{ansnfrm.ansn.1}}</span>.&emsp;&emsp; <span id="ans_b" > {{ q.option_b }}</span></div> -->
+                    <!-- <br> -->
+                    <!-- <div><span class="ccc">{{ansnfrm.ansn.2}}</span>.&emsp;&emsp; <span id="ans_c">{{ q.option_c }}</span> </div> -->
+                    <!-- <br> -->
+                    <!-- <div><span class="ddd">{{ansnfrm.ansn.3}}</span>.&emsp;&emsp; <span id="ans_d">{{ q.option_d }}</span></div> -->
+                    <br><div><span class="aaa"><input type="radio" name="option" class="option" id ="A" value="A"> A </span> .&emsp;&emsp;<span  id="ans_a">{{ q.option_a }}</span></div>
+                    <br><div><span class="bbb"><input type="radio" name="option" class="option" id ="B" value="B"> B </span> .&emsp;&emsp;<span  id="ans_b">{{ q.option_b }}</span></div>
+                    <br><div><span class="ccc"><input type="radio" name="option" class="option" id ="C" value="C"> C </span> .&emsp;&emsp;<span  id="ans_c">{{ q.option_c }}</span></div>
+                    <br><div><span class="ddd"><input type="radio" name="option" class="option" id ="D" value="D"> D </span> .&emsp;&emsp;<span  id="ans_d">{{ q.option_d }}</span></div>
                     {% endfor %}
                 </div>
 
@@ -299,7 +306,7 @@
                     <div class="que">
                         {% for q in ppr.que_set.all %}
                         <div class="no"><input type="button" 
-                                    class="btn btn_que" data-sid="{{q.qs_no}}" value="{{q.qs_no}}" /></div>
+                                    class="btn btn_que {{q.qs_no}}" data-sid="{{q.qs_no}}" value="{{q.qs_no}}" /></div>
                         {% endfor %}
                         
                     </div>

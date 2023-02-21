@@ -52,11 +52,17 @@
         // $("form")[0].reset();
         console.log("color")
         var opt = document.getElementsByClassName("option");
-        var time = document.getElementById('inp').value 
+        var t_r = document.getElementById('inp').value 
+        // console.log(typeof time)
+        let dist = parseInt(t_r);
+        let distance = dist/(1000 * 60)
+        console.log(typeof distance)
+        let time = Math.floor(distance)
         console.log(time)
+        
         if( $('.option').is(':checked') ) {
             var option = $(".option:checked").val();
-            console.log(option);
+            // console.log(option);
         }
         else{
             console.log("null")

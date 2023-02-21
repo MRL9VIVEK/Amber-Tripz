@@ -280,15 +280,26 @@ def next_que(request):
         ppr = request.POST['ppr']
         que_n = request.POST['que']
         opt_v = request.POST['ans']
-        time = request.POST['time_r']
-        print(time)
+        time_r = request.POST['time_r']
+        print(time_r)
+        
         # print(opt_v)
         ppr = Ppr.objects.get(title = ppr)
         que_a =Que.objects.get(course = ppr.course, ppr = ppr, qs_no = que_n)
         # print(que_a.answers)
         # print(que_a)
-        getqs=Ans.objects.filter(student=request.user, course = ppr.course, ppr=ppr, que_no=que_n).delete()
-        
+        time = Time.objects.filter(student=request.user, course = ppr.course, ppr=ppr)
+        if time:
+            time.delete()
+        else:
+            pass
+        time = Time(student=request.user, course = ppr.course, ppr=ppr, time = time_r)
+        time.save()
+        getqs=Ans.objects.filter(student=request.user, course = ppr.course, ppr=ppr, que_no=que_n)
+        if getqs :
+            getqs.delete()
+        else:
+            pass
         ans = Ans(student=request.user, course = ppr.course, ppr=ppr, que_no=que_n, que=que_a, answer=opt_v, correct_answer=que_a.answers, score=1)
         ans.save()
         que_count = Que.objects.filter(course = ppr.course, ppr = ppr).count()
@@ -299,10 +310,19 @@ def next_que(request):
             sid = 1
         # print(ppr.course)
         que = Que.objects.get(course = ppr.course, ppr = ppr, qs_no = sid)
-        answer = Ans.objects.get(student=request.user, course = ppr.course, ppr=ppr, que_no=sid)
-        print(answer)
-        ans = {"que_no" : answer.que_no, "answer" : answer.answer}
-        print(ans)
+        answer_f = Ans.objects.filter(student=request.user, course = ppr.course, ppr=ppr, que_no=sid)
+        if answer_f:
+            for a in answer_f:
+                print(a.answer)
+                answer = Ans.objects.get(student=request.user, course = ppr.course, ppr=ppr, que_no=sid)
+            
+            
+        else:
+            answer = Ans(student=request.user, course = ppr.course, ppr=ppr, que_no=sid, answer="null")
+            ans = {"que_no" : answer.que_no, "answer" : 'null'}
+            
+
+        
         # print(que)
         quen = {"qs_no" : que.qs_no, "questions" : que.questions, "option_a" : que.option_a, "option_b" : que.option_b, "option_c" : que.option_c, "option_d" : que.option_d, "answer" : answer.answer, "que_no" : answer.que_no}
         # answer_n = {"answer": answer}

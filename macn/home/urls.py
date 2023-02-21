@@ -42,6 +42,7 @@ urlpatterns = [
     path('score_card/<slug>', views.SCORE_CARD, name="score_card"),
     path('number/', views.number_que, name="number"),
     path('next/', views.next_que, name="next"),
+    path('mark/', views.mark_que, name="mark"),
 
     
 ]+ static(settings.MEDIA_URL,document_root = settings.MEDIA_ROOT)

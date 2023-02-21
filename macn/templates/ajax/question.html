@@ -1,5 +1,70 @@
 <script>
 
+
+    $("#mark").click(function () {
+        console.log("mark")
+        let qs_no = document.getElementById('q_no')
+        let id = parseInt(qs_no.innerHTML);
+        let q_no = id + 1;
+        console.log(q_no)
+        let paper = document.getElementById('ppr')
+        console.log(ppr.innerHTML)
+        let que_no = document.getElementById('q_no')
+            console.log(que_no.textContent)
+            let que_save = que_no.textContent - 1
+            var clr = document.getElementsByClassName('btn_que')[que_save]
+            clr.style.background = 'rgb(59, 19, 167)'
+            clr.style.color = 'white'
+            console.log(clr)
+        let op_a = document.getElementsByClassName('aaa')
+        let op_b = document.getElementsByClassName('bbb')
+        let op_c = document.getElementsByClassName('ccc')
+        let op_d = document.getElementsByClassName('ddd')
+        let csr = $("input[name=csrfmiddlewaretoken]").val();
+        mydata = { sid: q_no, ppr: ppr.innerHTML, csrfmiddlewaretoken: csr };
+        // mydata = { sid: q_no, ppr: ppr.innerHTML, que: id, ans: option, time_r: time, csrfmiddlewaretoken: csr };
+
+        $.ajax({
+            url: "{% url 'mark' %}",
+            method: "POST",
+            data: mydata,
+            success: function (data) {
+                // console.log(data)
+                $("form")[0].reset();
+                console.log(data.qs_no)
+
+                $("#q_no").html(data.qs_no);
+
+                $("#qst").html(data.questions);
+                $(".aaa").html(op_a.innerHTML);
+                $("#ans_a").html(data.option_a);
+                $(".bbb").html(op_b.innerHTML);
+                $("#ans_b").html(data.option_b);
+                $(".ccc").html(op_c.innerHTML);
+                $("#ans_c").html(data.option_c);
+                $(".ddd").html(op_d.innerHTML);
+                $("#ans_d").html(data.option_d);
+                console.log(data.answer)
+                if (data.answer == 'A') {
+                    // console.log("option A")
+                    $('#A').prop("checked", "true");
+                } else if (data.answer == 'B') {
+                    // console.log("option B")
+                    $('#B').prop("checked", "true");
+                } else if (data.answer == 'C') {
+                    // console.log("option C")
+                    $('#C').prop("checked", "true");
+                } else if (data.answer == 'D') {
+                    // console.log("option D")
+                    $('#D').prop("checked", "true");
+                } else {
+                    // console.log("not attempted")
+                }
+            }
+        })
+
+    })
+
     $("#clear").click(function () {
         console.log("clear")
         $("form")[0].reset();
@@ -9,14 +74,17 @@
     $(".btn_que").click(function () {
 
         let id = $(this).attr("data-sid");
+        console.log(id)
+        // document.getElementsByClassName(id).style.color = "red";
 
-        // console.log(typeof id);
+
+        console.log(typeof id);
         let que = parseInt(id);
         // console.log(typeof que);
-        let op_a = document.getElementById('aaa')
-        let op_b = document.getElementById('bbb')
-        let op_c = document.getElementById('ccc')
-        let op_d = document.getElementById('ddd')
+        let op_a = document.getElementsByClassName('aaa')
+        let op_b = document.getElementsByClassName('bbb')
+        let op_c = document.getElementsByClassName('ccc')
+        let op_d = document.getElementsByClassName('ddd')
 
         let paper = document.getElementById('ppr')
 
@@ -33,16 +101,34 @@
             method: "POST",
             data: mydata,
             success: function (data) {
+                $("form")[0].reset();
+                // console.log(data.answer)
                 $("#q_no").html(data.qs_no);
                 $("#qst").html(data.questions);
-                $("#aaa").html(op_a.innerHTML);
+                $(".aaa").html(op_a.innerHTML);
                 $("#ans_a").html(data.option_a);
-                $("#bbb").html(op_b.innerHTML);
+                $(".bbb").html(op_b.innerHTML);
                 $("#ans_b").html(data.option_b);
-                $("#ccc").html(op_c.innerHTML);
+                $(".ccc").html(op_c.innerHTML);
                 $("#ans_c").html(data.option_c);
-                $("#ddd").html(op_d.innerHTML);
+                $(".ddd").html(op_d.innerHTML);
                 $("#ans_d").html(data.option_d);
+                console.log(data.answer)
+                if (data.answer == 'A') {
+                    console.log("option A")
+                    $('#A').prop("checked", "true");
+                } else if (data.answer == 'B') {
+                    console.log("option B")
+                    $('#B').prop("checked", "true");
+                } else if (data.answer == 'C') {
+                    console.log("option C")
+                    $('#C').prop("checked", "true");
+                } else if (data.answer == 'D') {
+                    console.log("option D")
+                    $('#D').prop("checked", "true");
+                } else {
+                    console.log("not attempted")
+                }
             }
         })
     });
@@ -52,28 +138,44 @@
         // $("form")[0].reset();
         console.log("color")
         var opt = document.getElementsByClassName("option");
-        var t_r = document.getElementById('inp').value 
+        var t_r = document.getElementById('inp').value
         // console.log(typeof time)
         let dist = parseInt(t_r);
-        let distance = dist/(1000 * 60)
-        console.log(typeof distance)
+        let distance = dist / (1000 * 60)
+        // console.log(typeof distance)
         let time = Math.floor(distance)
-        console.log(time)
-        
-        if( $('.option').is(':checked') ) {
+        // console.log(time)
+
+
+
+        if ($('.option').is(':checked')) {
             var option = $(".option:checked").val();
             // console.log(option);
+            let que_no = document.getElementById('q_no')
+            console.log(que_no.textContent)
+            let que_save = que_no.textContent - 1
+            var clr = document.getElementsByClassName('btn_que')[que_save]
+            clr.style.background = 'green'
+            clr.style.color = 'white'
+            console.log(clr)
         }
-        else{
-            console.log("null")
+        else {
+            // console.log("null")
             var option = "null"
+            let que_no = document.getElementById('q_no')
+            console.log(que_no.textContent)
+            let que_save = que_no.textContent - 1
+            var clr = document.getElementsByClassName('btn_que')[que_save]
+            clr.style.background = 'rgb(192, 44, 113)'
+            clr.style.color = 'white'
+            console.log(clr)
         }
-        
+
 
 
 
         // let answer = document.getElementsByName('ansn');
-        
+
 
         let qs_no = document.getElementById('q_no')
 
@@ -111,24 +213,24 @@
                 $(".ddd").html(op_d.innerHTML);
                 $("#ans_d").html(data.option_d);
                 // $("form")[0].reset();
-                
-                console.log(data.answer)
-                console.log(data.que_no)
-                
+
+                // console.log(data.answer)
+                // console.log(data.que_no)
+
                 if (data.answer == 'A') {
-                    console.log("option A")
-                    $('#A').prop("checked" , "true");
-                } else if (data.answer == 'B'){
-                    console.log("option B")
-                    $('#B').prop("checked" , "true");
-                } else if (data.answer == 'C'){
-                    console.log("option C")
-                    $('#C').prop("checked" , "true");
-                } else if (data.answer == 'D'){
-                    console.log("option D")
-                    $('#D').prop("checked" , "true");
-                } else{
-                    console.log("not attempted")
+                    // console.log("option A")
+                    $('#A').prop("checked", "true");
+                } else if (data.answer == 'B') {
+                    // console.log("option B")
+                    $('#B').prop("checked", "true");
+                } else if (data.answer == 'C') {
+                    // console.log("option C")
+                    $('#C').prop("checked", "true");
+                } else if (data.answer == 'D') {
+                    // console.log("option D")
+                    $('#D').prop("checked", "true");
+                } else {
+                    // console.log("not attempted")
                 }
             }
 

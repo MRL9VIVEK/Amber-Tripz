@@ -250,19 +250,25 @@ def number_que(request):
 
     if request.method == 'POST':
         sid = request.POST['sid']
-        print(sid)
+        # print(sid)
         ppr = request.POST['ppr']
-        print(ppr)
+        # print(ppr)
         ppr = Ppr.objects.get(title = ppr)
-        print(ppr.title)
-        print(ppr.course)
+        # print(ppr.title)
+        # print(ppr.course)
         que = Que.objects.get(course = ppr.course, ppr = ppr, qs_no = sid)
-        print(que)
-        quen = {"qs_no" : que.qs_no, "questions" : que.questions, "option_a" : que.option_a, "option_b" : que.option_b, "option_c" : que.option_c, "option_d" : que.option_d}
-        ansnfrm=AnsnChoice()
-        print(ansnfrm)
-        ans = list(ansnfrm)
-        print(ans)
+        # print(que)
+        getqs=Ans.objects.filter(student=request.user, course = ppr.course, ppr=ppr, que_no=sid)
+        if getqs:
+            answer = Ans.objects.get(student=request.user, course = ppr.course, ppr=ppr, que_no=sid)
+        else:
+            answer = Ans(student=request.user, course = ppr.course, ppr=ppr, que_no=sid, answer="null")
+        print(answer)
+        quen = {"qs_no" : que.qs_no, "questions" : que.questions, "option_a" : que.option_a, "option_b" : que.option_b, "option_c" : que.option_c, "option_d" : que.option_d, "answer" : answer.answer}
+        # ansnfrm=AnsnChoice()
+        # print(ansnfrm)
+        # ans = list(ansnfrm)
+        # print(ans)
         # que = Que.objects.values().filter(course = ppr.course, ppr = ppr, qs_no = sid)
         # que_n = list(que)
         # print(que_n)
@@ -329,6 +335,38 @@ def next_que(request):
         return JsonResponse(quen)
     else:
         return JsonResponse({'status': 0})
+
+
+def mark_que(request):
+    if request.method == 'POST':
+        sid = request.POST['sid']
+        ppr = request.POST['ppr']
+        ppr = Ppr.objects.get(title = ppr)
+        que_count = Que.objects.filter(course = ppr.course, ppr = ppr).count()
+        id = int(sid)
+        if id <= que_count :
+            sid = id
+        else:
+            sid = 1
+
+        que =Que.objects.get(course = ppr.course, ppr = ppr, qs_no = sid)
+        print(que)
+        answer_f = Ans.objects.filter(student=request.user, course = ppr.course, ppr=ppr, que_no=sid)
+        if answer_f:
+            for a in answer_f:
+                print(a.answer)
+                answer = Ans.objects.get(student=request.user, course = ppr.course, ppr=ppr, que_no=sid)
+            
+            
+        else:
+            answer = Ans(student=request.user, course = ppr.course, ppr=ppr, que_no=sid, answer="null")
+            ans = {"que_no" : answer.que_no, "answer" : 'null'}
+        quen = {"qs_no" : que.qs_no, "questions" : que.questions, "option_a" : que.option_a, "option_b" : que.option_b, "option_c" : que.option_c, "option_d" : que.option_d, "answer" : answer.answer}
+        print(quen)
+        return JsonResponse(quen)
+    else:
+        return JsonResponse({'status': 0})
+
 
 def SUBMIT(request, slug):
     ppr = Ppr.objects.get(new_slug = slug)

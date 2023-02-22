@@ -204,6 +204,7 @@ def instructions(request, slug):
     else:
         time = Time(student = request.user, course = ppr.course, ppr = ppr, time = ppr.time_duration)
         time.save()
+    print(time)
     context = {
         'ppr' : ppr,
         'time' : time,
@@ -219,6 +220,8 @@ def Question(request, slug):
     que = Que.objects.filter(course = ppr.course, ppr = ppr)
     # print(que)
     q = Que.objects.filter(course = ppr.course, ppr = ppr)
+    time = Time.objects.get(student = request.user, course = ppr.course, ppr = ppr)
+    print(time)
     paginator=Paginator(que, 1)
     page_number = request.GET.get('page', 1)
     que = paginator.get_page(page_number)
@@ -237,11 +240,13 @@ def Question(request, slug):
         
         ans = Ans(student=request.user, course = ppr.course, ppr=ppr, que_no = quen.qs_no, que = quen, answer=ansn, correct_answer = quen.answers, score=s)
         ans.save()
+        
     context = {
         'subject' : subject,
         'ppr' : ppr,
         'que' : que,
         'ansnfrm' : ansnfrm,
+        'time' : time,
         'q' : q,
     }
     return render(request, "test/question.html", context)
@@ -253,11 +258,21 @@ def number_que(request):
         # print(sid)
         ppr = request.POST['ppr']
         # print(ppr)
+        
+        que_n = request.POST['q_n']
+        q_n = int(que_n)
+        print(q_n)
         ppr = Ppr.objects.get(title = ppr)
         # print(ppr.title)
         # print(ppr.course)
         que = Que.objects.get(course = ppr.course, ppr = ppr, qs_no = sid)
         # print(que)
+        ans_f = Ans.objects.filter(student=request.user, course = ppr.course, ppr=ppr, que_no=q_n) 
+        if ans_f:
+            ans_c = Ans.objects.get(student=request.user, course = ppr.course, ppr=ppr, que_no=q_n)
+            print(ans_c)
+        else:
+            pass
         getqs=Ans.objects.filter(student=request.user, course = ppr.course, ppr=ppr, que_no=sid)
         if getqs:
             answer = Ans.objects.get(student=request.user, course = ppr.course, ppr=ppr, que_no=sid)
@@ -366,6 +381,12 @@ def mark_que(request):
         return JsonResponse(quen)
     else:
         return JsonResponse({'status': 0})
+    
+
+def result_d(request, slug):
+    ppr = Ppr.objects.get(new_slug = slug)
+    subject = Subject.objects.filter(course = ppr.course) 
+    return render(request, "test/explanation.html")
 
 
 def SUBMIT(request, slug):

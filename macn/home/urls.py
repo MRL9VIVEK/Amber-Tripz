@@ -28,6 +28,7 @@ urlpatterns = [
     path('my-test-series', views.MY_TEST_SERIES, name="my_test_series"),
     path('my-test-series/<slug:slug>', views.MY_TEST_SERIES_SLUG, name="my_test_series_slug"),
     path('instructions/<slug>', views.instructions, name="instructions"),
+    path('result_explanation/<slug>', views.result_d, name="result_d"),
     path('Question/<slug>', views.Question, name="Question"),
     path('submit/<slug>', views.SUBMIT, name="submit"),
     path('Questions/<slug>', views.QUESTIONS, name="questions"),

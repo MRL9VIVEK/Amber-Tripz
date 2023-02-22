@@ -135,6 +135,8 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            width: 34px;
+            height: 34px;
             /* border: 2px solid black; */
             border-radius: 50%;
             margin: 5px;
@@ -201,8 +203,8 @@
             justify-content: center;
             align-items: center;
             font-size: 12px;
-            width: 30px;
-            height: 30px;
+            width: 40px;
+            height: 40px;
             border: 1px solid white;
             border-radius: 50%;
             background-color: white;
@@ -236,39 +238,8 @@
                 {% endfor %}
 
             </div>
-            <script>
-                distance = 60 * 60 * 1000
-                var x = setInterval(function () {
-                    // distance = sessionStorage.getItem('distance')
-                    
-
-                    distance = distance - 1000
-                    sessionStorage.setItem('distance', distance);
-                    var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-                    if (minutes > 0 && hours > 0) {
-                        document.getElementById("leo").innerHTML = hours + "h " + minutes + "m " + seconds + "s ";
-                    }
-                    else if (hours == 0 && minutes > 0) {
-                        document.getElementById("leo").innerHTML = minutes + "m " + seconds + "s ";
-                    }
-                    else {
-                        document.getElementById("leo").innerHTML = seconds + "s ";
-                    }
-                    if (distance < 600000) {
-
-                        document.getElementById("leo").style.color = "red";
-                    }
-                    $('#inp').val(distance)
-                    if (distance < 0) {
-                        clearInterval(x);
-                        document.getElementById("leo").innerHTML = "EXPIRED"
-                        // window.location.assign("/submit/{{ppr.new_slug}}")
-                    }
-                }, 1000);
-            </script>
-            <div class="box box3">Time Left : &nbsp<span id="leo"></span></div>
+            
+            <div class="box box3">Time Left : &nbsp<span id="leo">{{time.time}}</span></div>
             <form action="">
                 <div class="box box4" style="padding:20px;">
                     {% for q in que %}
@@ -300,7 +271,7 @@
                     <div class="att">Answered</div>
                     <div class="attb" style="background-color: rgb(201, 45, 110) ;">2</div>
                     <div class="att">Not Answered</div>
-                    <div class="attb" style="background-color: rgb(69, 70, 69);">3</div>
+                    <div class="attb" style="background-color: white; color: black;">3</div>
                     <div class="att">Not Visited</div>
                     <div class="attb" style="background-color: rgb(59, 19, 167) ;">4</div>
                     <div class="att">Mark For Review</div>
@@ -337,7 +308,7 @@
         </div>
     </form>
     <div class="box box8">
-         <div><a href="/submit/{{ppr.new_slug}}"><input type="button" class="btn1" value="Submit" /></a></div>
+         <div><a id="sub" href="/submit/{{ppr.new_slug}}"><input type="button" class="btn1" value="Submit" /></a></div>
 
     </div>
 
@@ -346,6 +317,43 @@
     <script src="{% static 'js/popper.js' %}"></script>
     <script src="{% static 'js/bootstrap.js' %}"></script>
     {% include "ajax/question.html" %}
+    <script>
+        var a = document.getElementById('sub').href
+        console.log(a)
+        var time = document.getElementById('leo')
+        console.log(time.innerHTML)
+        
+        distance = time.innerHTML * 60 * 1000
+        var x = setInterval(function () {
+            // distance = sessionStorage.getItem('distance')
+            
+
+            distance = distance - 1000
+            sessionStorage.setItem('distance', distance);
+            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            if (minutes > 0 && hours > 0) {
+                document.getElementById("leo").innerHTML = hours + "h " + minutes + "m " + seconds + "s ";
+            }
+            else if (hours == 0 && minutes > 0) {
+                document.getElementById("leo").innerHTML = minutes + "m " + seconds + "s ";
+            }
+            else {
+                document.getElementById("leo").innerHTML = seconds + "s ";
+            }
+            if (distance < 600000) {
+
+                document.getElementById("leo").style.color = "red";
+            }
+            $('#inp').val(distance)
+            if (distance < 0) {
+                clearInterval(x);
+                document.getElementById("leo").innerHTML = "EXPIRED"
+                window.location.assign(a)
+            }
+        }, 1000);
+    </script>
 </body>
 
 </html>

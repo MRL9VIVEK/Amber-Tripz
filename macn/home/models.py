@@ -128,6 +128,8 @@ class Subject(models.Model):
     thumbnail = models.ImageField(upload_to="Media/subject", null=True)
     subject_name = models.CharField(max_length=200)
     title = models.CharField(max_length=300, null=True)
+    total_que = models.CharField(max_length=300, null=True)
+    total_marks = models.CharField(max_length=300, null=True)
     slug_s = AutoSlugField(populate_from='title', unique=True, null=True, default=None)
     
 

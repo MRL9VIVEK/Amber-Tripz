@@ -6,32 +6,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ppr.title}}</title>
     <style>
-        .cover
-            {
-                
-                height:300px;
-                display:grid;
-                grid-template-columns: auto;
-                justify-content: center;
-                align-items: center;
-        }
-        .container{
-            
-            display:grid;
-            grid-template-columns: 250px 130px 130px 130px ;
-            grid-template-rows: 50px 60px 80px 70px 70px 70px 70px;
+        .container {
+            display: grid;
             justify-content: center;
-            height: 400px;
-            overflow: scroll;
-            
         }
-        .inst{
+        .box {
+            display: grid;
+            width: 650px;
+            height: 450px;
+            border: 2px solid black;
+            overflow: auto;
+            /* grid-gap:1px; */
+            grid-template-columns: 250px 130px 130px 130px;
+            /* background-color: blueviolet; */
+            /* grid-gap: 1px; */
+            grid-template-rows: 50px 60px 80px 280px
+        }
+        
+
+        .inst {
             display: flex;
-            background-color: blanchedalmond;
+            background-color: whitesmoke;
             /* border: 1px solid black; */
             justify-content: center;
             align-items: center;
-            
+
         }
         .b1{
             grid-column-start: 1;
@@ -44,6 +43,14 @@
             grid-column-end: 5;
             font-size: 20px;
             font-weight: bold;
+        }
+        .sss {
+            display: grid;
+            padding: 10px;
+            justify-content: space-around;
+            align-items: center;
+            height: auto;
+
         }
         .time{
             grid-row-start: span 4
@@ -60,7 +67,7 @@
             font-size: 20px;
         }
         .border{
-            border:1px solid burlywood;
+            border: 1px solid rgb(14, 13, 13);
         }
         .bt1{
             padding:5px;
@@ -69,28 +76,48 @@
     </style>
 </head>
 <body>
-    <div class="cover">
+    <!-- <div class="cover"> -->
     <div class="container">
+        <div class="box">
         
-        <div class="inst b1">Instruction</div>
-        <div class="inst b2">Please read the following instructions very carefully:</div>
+        <div class="inst b1 border">Instruction</div>
+        <div class="inst b2 border">Please read the following instructions very carefully:</div>
         <div class="inst bold border">Subject</div>
         <div class="inst bold border">Number of Questions</div>
         <div class="inst bold border">Maximum Marks</div>
         <div class="inst bold border">Time</div>
-        <div class="inst border">General Awareness</div>
-        <div class="inst border">25</div>
-        <div class="inst border">50</div>
-        <div class="inst time border"><span id="time"> {{time.time}} </span> &nbsp min.</div>
-        <div class="inst border">English</div>
-        <div class="inst border">25</div>
-        <div class="inst border">50</div>
-        <div class="inst border">Quantitative Apptitude</div>
-        <div class="inst border">25</div>
-        <div class="inst border">50</div>
-        <div class="inst border">Reasoning</div>
-        <div class="inst border">25</div>
-        <div class="inst border">50</div>
+        <div class="inst sss border">
+            {% for s in subject %}
+            <div class="inst">{{ s.subject_name }}</div>
+            <!-- <div class="inst">subject2</div> -->
+            <!-- <div class="inst">subject3</div> -->
+            <!-- <div class="inst">subject4</div> -->
+            {% endfor %}
+
+        </div>
+        <div class="inst sss border">
+            {% for q in subject %}
+            <div class="inst">{{q.total_que}}</div>
+            <!-- <div class="inst">que</div> -->
+            <!-- <div class="inst">que</div> -->
+            <!-- <div class="inst">que</div> -->
+            {% endfor %}
+
+
+        </div>
+        <div class="inst sss border">
+            {% for m in subject %}
+            <div class="inst">{{m.total_marks}}</div>
+            <!-- <div class="inst">marks</div> -->
+            <!-- <div class="inst">marks</div> -->
+            <!-- <div class="inst">marks</div> -->
+            {% endfor %}
+        </div>
+        <div class="inst border" >{{ppr.time_duration}} min.</div>
+
+        
+    
+        
         <div class="rule">
        
         1. You have 30 minutes to complete the <br>
@@ -119,7 +146,7 @@
     <br>
     <br>
     
-    <a href="/Question/{{ppr.new_slug}}" target="_blank">
+    <a href="/Question/{{ppr.new_slug}}">
     <button disabled="true" id="btn" class="bt1">Start Test</button>
 </a>
     <button class="bt1">Cancel</button>

@@ -1,54 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
-        .container{
-            display:flex;
-            justify-content: center;
-            
-            
-        }
-        .box{
+        .container {
             display: grid;
-            grid-template-columns: 1fr 1fr ;
+            justify-content: center;
+            /* align-items: center; */
+            /* align-content: center; */
+
+
+        }
+
+        .box {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
-            
-            background-color: azure;
+
+            background-color: rgb(200, 195, 245);
             border: 1px solid black;
             margin-top: 100px;
-            width:700px;
-            height:200px;
+            width: 700px;
+            height: 200px;
         }
-        .b1{
+
+        .b1 {
             border: 1px solid black;
-            
+
         }
+
         .box1 {
             grid-column-start: 1;
             grid-column-end: 3;
-            display:flex;
+            display: flex;
             justify-content: space-around;
             align-items: center;
             font-weight: bold;
             font-size: larger;
         }
-        .boxl{
-            
+
+        .cls{
+            display:flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .boxl {
+
             font-weight: bold;
             font-size: large;
-            
+
         }
-        .boxd{
+        #close{
+            font-size: larger;
+            padding: 5px;
+            background-color: rgb(200, 195, 245);;
+        }
+
+        .boxd {
             display: flex;
             justify-content: center;
             align-items: center;
         }
+
+        .button {
+            grid-column-start: 1;
+            grid-column-end: 3;
+            margin-top: 5px;
+        }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="box">
@@ -64,9 +91,35 @@
             <div class="b1 boxd">Not Answer</div>
             <div class="b1 boxd">{{result.not_answer}}</div>
             <div class="b1 boxd boxl">Total score</div>
-            <div class="b1 boxd boxl">1</div>
-            
+            <div class="b1 boxd boxl">1</div><br><br>
+
         </div>
+        <div class="cls">
+            <input type="button" id="close" class="btn btn-success"
+                     style=" display: inline;"
+                     value="Close Window"
+                     onclick="closeMe()">
+
+                     
+            
+    <!-- <input type="button" id="close" onclick="window.close()" value="close "/> -->
+        </div>
+
+        
     </div>
 </body>
+<script>
+        function closeMe()
+{
+    var win = window.open("", "_self");
+win.close();
+}
+
+// function closeMen()
+// {
+//     window.opener = self;
+//     window.close();
+// }
+</script>
+
 </html>

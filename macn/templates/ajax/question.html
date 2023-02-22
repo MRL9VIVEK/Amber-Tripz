@@ -72,37 +72,40 @@
     })
 
     $(".btn_que").click(function () {
-
+        // $("form")[0].reset();
+        let que_no = document.getElementById('q_no')
+        console.log(que_no.innerHTML)
+        var qs_no = que_no.innerHTML
+        let que_save =  qs_no - 1
+        if ($('.option').is(':checked')) {
+            var opt = "answered"
+        } else {
+            var clr = document.getElementsByClassName('btn_que')[que_save]
+            clr.style.background = 'rgb(192, 44, 113)'
+            clr.style.color = 'white'
+            var opt = "null"
+            
+        }
+        console.log(opt)
         let id = $(this).attr("data-sid");
-        console.log(id)
-        // document.getElementsByClassName(id).style.color = "red";
-
-
-        console.log(typeof id);
+        // console.log(id)
+        // console.log(typeof id);
         let que = parseInt(id);
-        // console.log(typeof que);
         let op_a = document.getElementsByClassName('aaa')
         let op_b = document.getElementsByClassName('bbb')
         let op_c = document.getElementsByClassName('ccc')
         let op_d = document.getElementsByClassName('ddd')
-
         let paper = document.getElementById('ppr')
-
-        <!-- console.log(ppr.textContent) -->
-
-
-
         let csr = $("input[name=csrfmiddlewaretoken]").val();
-        mydata = { sid: que, ppr: ppr.textContent, csrfmiddlewaretoken: csr };
-        // console.log(mydata);
-
+        mydata = { sid: que, ppr: ppr.textContent, option: opt, q_n: qs_no, csrfmiddlewaretoken: csr };
+        
         $.ajax({
             url: "{% url 'number' %}",
             method: "POST",
             data: mydata,
             success: function (data) {
                 $("form")[0].reset();
-                // console.log(data.answer)
+                
                 $("#q_no").html(data.qs_no);
                 $("#qst").html(data.questions);
                 $(".aaa").html(op_a.innerHTML);

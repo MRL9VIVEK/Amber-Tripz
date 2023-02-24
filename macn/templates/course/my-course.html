@@ -86,30 +86,27 @@
                                                                 
 
                                                                 
-                                                    </li>
-                                                    <li class="nav-item px-3">
-                                                        <a  href="/result/{{i.new_slug}}" style="border:4px solid rgba(var(--bs-gigas-rgb)); padding:4px; border-radius: 8px; color:white; background-color: rgba(var(--bs-gigas-rgb)); ">
-                                                            View Result
-                                                        </a>
-                                                    </li>
+                                                    
+                                                    <li class="nav-item px-6">
+                                                        <!-- <a  href="/result/{{i.new_slug}}" style="border:4px solid rgba(var(--bs-gigas-rgb)); margin:0px; padding: 4px; border-radius: 8px; color:white; background-color: rgba(var(--bs-gigas-rgb)); "> -->
+                                                            Expires on <span id="time">{{i.expiry_date.date}}</span>
+                                                            <!-- <label for="date">Expires on</label><input type="datetime" class="date" name="date" value = "{{i.expiry_date.date}}"><br> -->
+                                                        <!-- </a> -->
+                                                    
                                                 </ul>
                                             </div>
 
                                             
-                                        <div class="col-auto px-2 text-right">
-                                            
-                                            <a  href="/result/{{i.new_slug}}" style="border:4px solid rgba(var(--bs-gigas-rgb)); padding:4px; border-radius: 8px; color:white; background-color: rgba(var(--bs-gigas-rgb)); ">
-                                                View Result
-                                            </a> </div>
+                                        
                                        
-                                        <div class="col-auto px-2 text-right">
-                                       </div>
+                                        
                                         
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                                                     
                          {% endfor %}
             </div>
             
@@ -119,5 +116,18 @@
 
         
     </div>
+    <script>
+        // var field = document.getElementsByClassName('date').value;
+        // console.log(field)
+        // console.log(typeof field)
+        // let d = new Date(field);
+        // console.log(d)
+        // let date= field.valueAsDate;
+
+        // console.log(date.toLocaleDateString())
+        // let date_n = new Date(`${field.value}T00:00`);
+        // console.log(date_n)
+
+    </script>
 
 {% endblock %}

@@ -8,7 +8,11 @@ from django.views.decorators.csrf import csrf_exempt
 from.forms import ExamChoiceFrm, AnsChoice, AnsnChoice
 from django.core import serializers
 from django.http import JsonResponse
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 from macn.settings import *
+import pandas as pd
+import numpy as np
 import razorpay
 from time import time
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -29,6 +33,14 @@ def home(request):
     return render(request, 'main/home.html', context)
 
 def contact(request):
+    category = Categories.get_all_category(Categories)
+    current_date = datetime.today()
+    print('Current Date: ', current_date)
+    n = 12
+    future_date = current_date + relativedelta(months=n)
+    print('Date - 12 months from current date: ', future_date)
+    print('Date - 12 months from current date: ', future_date.date())
+    print('Date - 12 months from current date: ', future_date.time())
     
     if request.method=="POST":
         name = request.POST.get('name')
@@ -36,7 +48,7 @@ def contact(request):
         
         emailn = request.POST.get('email')
         message = request.POST.get('message')
-        contact = Contact(name=name, email=emailn, desc=message)
+        contact = Contact(name=name, email=emailn, desc=message, expiry_date = future_date)
         # print(emailn)
         emailo= Contact.objects.filter(email=emailn)
         # print(emailo)
@@ -44,7 +56,9 @@ def contact(request):
             pass
         else:
             contact.save()
-    category = Categories.get_all_category(Categories)
+
+    
+    
     context = {
         'category' : category,
     }
@@ -151,6 +165,17 @@ def PAGE_NOT_FOUND(request):
 
 def MY_COURSE(request):
     course = UserCourse.objects.filter(user = request.user)
+    for c in course:
+        ex_d = c.expiry_date.date()
+        current_date = datetime.today()
+        c_d = current_date.date()
+        print(ex_d, c_d )
+        diff = ex_d - c_d
+        print(diff.days)
+        if diff.days > 0:
+            print("abhi hum zinda hai")
+        else:
+            print("ab kuch ni ho skta")
     category = Categories.get_all_category(Categories)
     
     context = {
@@ -565,11 +590,21 @@ def CHECKOUT(request, slug):
     course = Course.objects.get(slug = slug)
     action = request.GET.get('action')
     order = None
+    now = datetime.now()
+    print("now = ", now)
 
     if course.price == 0:
+        current_date = datetime.today()
+        print('Current Date: ', current_date)
+        n = 12
+        future_date = current_date + relativedelta(months=n)
+        print('Date - 12 months from current date: ', future_date)
+        print('Date - 12 months from current date: ', future_date.date())
+        print('Date - 12 months from current date: ', future_date.time())
         course = UserCourse(
             user = request.user,
             course = course,
+            expiry_date = future_date
         )
         course.save()
         messages.success(request,'Course Are Successfully Enrolled')
@@ -644,9 +679,18 @@ def VERIFY_PAYMENT(request):
         payment.payment_id = payment_id
         payment.signature_id = signature_id
         payment.status = True
+        category = Categories.get_all_category(Categories)
+        current_date = datetime.today()
+        print('Current Date: ', current_date)
+        n = 12
+        future_date = current_date + relativedelta(months=n)
+        print('Date - 12 months from current date: ', future_date)
+        print('Date - 12 months from current date: ', future_date.date())
+        print('Date - 12 months from current date: ', future_date.time())
         usercourse = UserCourse (
                 user = payment.user,
                 course = payment.course,
+                expiry_date = future_date,
             )
         usercourse.save()
         payment.user_course = usercourse

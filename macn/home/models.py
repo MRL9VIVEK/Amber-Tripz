@@ -179,6 +179,7 @@ class Que(models.Model):
     ppr = models.ForeignKey(Ppr, on_delete=models.CASCADE,null=True)
     subject = models.CharField(max_length=300, null=True)
     questions=models.TextField(null=True)
+    image = models.ImageField(upload_to='que/images', default="")
     answers=models.CharField(max_length=20, null=True)
     option_a=models.TextField(null=True)
     option_b=models.TextField(null=True)
@@ -227,6 +228,8 @@ class UserCourse(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     paid = models.BooleanField(default=0)
     date = models.DateTimeField(auto_now_add=True)
+    status = models.IntegerField(default=1)
+    expiry_date = models.DateTimeField(null=True, blank=True)
     
 
     def __str__(self):
@@ -253,6 +256,8 @@ class Contact(models.Model):
     name = models.CharField(max_length=50,null=True, blank=True)
     email = models.CharField(max_length=70, null=True, blank=True)
     desc = models.CharField(max_length=500, null=True, blank=True)
+    
+    expiry_date = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return self.email

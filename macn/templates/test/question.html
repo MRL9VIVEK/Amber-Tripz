@@ -248,18 +248,13 @@
 
 
                     </div>
+                    <div><br>
+                        <img src="/{{ q.image }}" alt="" width="auto" height=""> </div>
 
-                    <br>
+                    
                     
 
-                    <!-- <div><span class="aaa">{{ansnfrm.ansn.0}}</span>.&emsp;&emsp;<span  id="ans_a">{{ q.option_a }}</span></div> -->
-                    <!-- <br> -->
-                    <!-- <div><span class="bbb">{{ansnfrm.ansn.1}}</span>.&emsp;&emsp; <span id="ans_b" > {{ q.option_b }}</span></div> -->
-                    <!-- <br> -->
-                    <!-- <div><span class="ccc">{{ansnfrm.ansn.2}}</span>.&emsp;&emsp; <span id="ans_c">{{ q.option_c }}</span> </div> -->
-                    <!-- <br> -->
-                    <!-- <div><span class="ddd">{{ansnfrm.ansn.3}}</span>.&emsp;&emsp; <span id="ans_d">{{ q.option_d }}</span></div> -->
-                    <br><div><span class="aaa"><input type="radio" name="option" class="option" id ="A" value="A"> A </span> .&emsp;&emsp;<span  id="ans_a">{{ q.option_a }}</span></div>
+                   <div><span class="aaa"><input type="radio" name="option" class="option" id ="A" value="A"> A </span> .&emsp;&emsp;<span  id="ans_a">{{ q.option_a }}</span></div>
                     <br><div><span class="bbb"><input type="radio" name="option" class="option" id ="B" value="B"> B </span> .&emsp;&emsp;<span  id="ans_b">{{ q.option_b }}</span></div>
                     <br><div><span class="ccc"><input type="radio" name="option" class="option" id ="C" value="C"> C </span> .&emsp;&emsp;<span  id="ans_c">{{ q.option_c }}</span></div>
                     <br><div><span class="ddd"><input type="radio" name="option" class="option" id ="D" value="D"> D </span> .&emsp;&emsp;<span  id="ans_d">{{ q.option_d }}</span></div>
@@ -350,7 +345,7 @@
             if (distance < 0) {
                 clearInterval(x);
                 document.getElementById("leo").innerHTML = "EXPIRED"
-                window.location.assign(a)
+                // window.location.assign(a)
             }
         }, 1000);
     </script>

@@ -1,4 +1,18 @@
 <script>
+    console.log("first page")
+    let paper = document.getElementById('ppr')
+        console.log(ppr.innerHTML)
+        let csr = $("input[name=csrfmiddlewaretoken]").val();
+        mydata = {ppr: ppr.innerHTML, csrfmiddlewaretoken: csr };
+        $.ajax({
+            url: "{% url 'que_page' %}",
+            method: "POST",
+            data: mydata,
+            success: function (data) {
+                console.log("success")
+                console.log(ans_filter.answer)
+            }
+        })
 
 
     $("#mark").click(function () {
@@ -21,7 +35,7 @@
         let op_c = document.getElementsByClassName('ccc')
         let op_d = document.getElementsByClassName('ddd')
         let csr = $("input[name=csrfmiddlewaretoken]").val();
-        mydata = { sid: q_no, ppr: ppr.innerHTML, csrfmiddlewaretoken: csr };
+        mydata = { sid: q_no, ppr: ppr.innerHTML, q_p: id, csrfmiddlewaretoken: csr };
         // mydata = { sid: q_no, ppr: ppr.innerHTML, que: id, ans: option, time_r: time, csrfmiddlewaretoken: csr };
 
         $.ajax({
@@ -31,9 +45,16 @@
             success: function (data) {
                 // console.log(data)
                 $("form")[0].reset();
-                console.log(data.qs_no)
-
+                // console.log(data.mark)
+                // console.log(data.saved)
+                // console.log(data.not_saved)
+                let n_v = data.total - (data.saved + data.not_saved)
+                // console.log(n_v)
+                $("#saved").html(data.saved);
+                $("#not_answered").html(data.not_saved);
+                $("#not_visited").html(n_v);
                 $("#q_no").html(data.qs_no);
+                $("#mark_review").html(data.mark);
 
                 $("#qst").html(data.questions);
                 $(".aaa").html(op_a.innerHTML);
@@ -72,7 +93,7 @@
     })
 
     $(".btn_que").click(function () {
-        // $("form")[0].reset();
+        console.log("click que")
         let que_no = document.getElementById('q_no')
         console.log(que_no.innerHTML)
         var qs_no = que_no.innerHTML
@@ -87,6 +108,7 @@
             
         }
         console.log(opt)
+        console.log(typeof opt)
         let id = $(this).attr("data-sid");
         // console.log(id)
         // console.log(typeof id);
@@ -105,7 +127,11 @@
             data: mydata,
             success: function (data) {
                 $("form")[0].reset();
-                
+                console.log(data.total_que)
+                console.log(data.total_saved)
+                console.log(data.not_saved)
+                $("#saved").html(data.total_saved);
+                $("#not_answered").html(data.not_saved);
                 $("#q_no").html(data.qs_no);
                 $("#qst").html(data.questions);
                 $(".aaa").html(op_a.innerHTML);
@@ -139,7 +165,7 @@
 
     $("#btnnext").click(function () {
         // $("form")[0].reset();
-        console.log("color")
+        console.log("save and next button")
         var opt = document.getElementsByClassName("option");
         var t_r = document.getElementById('inp').value
         // console.log(typeof time)
@@ -202,7 +228,17 @@
             data: mydata,
             success: function (data) {
                 $("form")[0].reset();
-                // console.log(data.ans)
+                // console.log(data.total_save)
+                // console.log(data.not_saved)
+                // console.log(data.total)
+                let not_visited = data.total - (data.total_save + data.not_saved) 
+                console.log("not visited", not_visited)
+                $("#saved").html(data.total_save);
+                $("#not_answered").html(data.not_saved);
+                $("#not_visited").html(not_visited);
+                
+
+                // console.log(data.ans_ns)
 
                 $("#q_no").html(data.qs_no);
 

@@ -198,6 +198,7 @@ class Ans(models.Model):
     que=models.ForeignKey(Que,on_delete=models.CASCADE)
     answer=models.CharField(max_length=20, null=True)
     correct_answer=models.CharField(max_length=20, null=True)
+    mark = models.IntegerField(default=0)
     score=models.FloatField(default=0)
     # date=models.DateTimeField(auto_now_add=True)
     def __str__(self):

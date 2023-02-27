@@ -5,6 +5,15 @@
 {% block title %} {{course.title}} My Courses {% endblock title %}
 
 {% block content %}
+<style>
+    .dormant{
+        pointer-events: none;
+  cursor: default;
+    }
+    #time{
+        color:blue;
+    }
+</style>
 
  <!-- PAGE TITLE
     ================================================== -->
@@ -34,15 +43,13 @@
         <img class="d-none img-fluid" src="...html" alt="...">
     </header>
 
-
-   
-
-    <!-- COURSE LIST V1
+<!-- COURSE LIST V1
     ================================================== -->
     <div class="container pb-4 pb-xl-7">
         {% include 'components/msg.html' %}
         <div class="row row-cols-md-2 row-cols-xl-3 mb-6 mb-xl-3">
             {% for i in course %}
+            {% if i.status == 1 %}
                         <div class="col-12 col-md-6 col-xl-4 col-wd-3 pb-4 pb-md-7" style="padding-right:15px;padding-left:15px;">
                             <!-- Card -->
                             <div class="card border shadow p-2 rounded-lg sk-fade">
@@ -61,7 +68,7 @@
 
                                 <!-- Footer -->
                                 <div class="card-footer px-2 pb-2 mb-1 pt-4 position-relative">
-                                    <a href="my-course/{{i.course.slug}}" class="d-block">
+                                    <a href="" class="d-block">
                                         <div class="avatar avatar-xl badge-float position-absolute top-0 right-0 mt-n6 me-5 rounded-circle shadow border border-white border-w-lg">
                                             <img src="{{i.course.author.author_profile}}" alt="..." class="avatar-img rounded-circle">
                                         </div>
@@ -89,7 +96,7 @@
                                                     
                                                     <li class="nav-item px-6">
                                                         <!-- <a  href="/result/{{i.new_slug}}" style="border:4px solid rgba(var(--bs-gigas-rgb)); margin:0px; padding: 4px; border-radius: 8px; color:white; background-color: rgba(var(--bs-gigas-rgb)); "> -->
-                                                            Expires on <span id="time">{{i.expiry_date.date}}</span>
+                                                            <span id="time"> Expires on {{i.expiry_date.date}}</span>
                                                             <!-- <label for="date">Expires on</label><input type="datetime" class="date" name="date" value = "{{i.expiry_date.date}}"><br> -->
                                                         <!-- </a> -->
                                                     
@@ -106,6 +113,69 @@
                                 </div>
                             </div>
                         </div>
+                        {% else %}
+                        <div class="col-12 col-md-6 col-xl-4 col-wd-3 pb-4 pb-md-7 dormant" style="padding-right:15px;padding-left:15px;">
+                            <!-- Card -->
+                            <div class="card border shadow p-2 rounded-lg sk-fade">
+                                
+                                <div class="card-zoom position-relative">
+                                    <div class="badge-float sk-fade-top top-0 right-0 mt-4 me-4">
+                                       
+                                    </div>
+
+                                    <a href="my-course/{{i.course.slug}}" class="card-img sk-thumbnail img-ratio-9 d-block">
+                                        <img class="rounded shadow-light-lg" src="{{i.course.featured_image}}" alt="...">
+                                    </a>
+
+                                    
+                                </div>
+
+                                <!-- Footer -->
+                                <div class="card-footer px-2 pb-2 mb-1 pt-4 position-relative">
+                                    <a href="" class="d-block">
+                                        <div class="avatar avatar-xl badge-float position-absolute top-0 right-0 mt-n6 me-5 rounded-circle shadow border border-white border-w-lg">
+                                            <img src="{{i.course.author.author_profile}}" alt="..." class="avatar-img rounded-circle">
+                                        </div>
+                                    </a>
+
+                                    <!-- Preheading -->
+                                    <a href="my-course/{{i.course.slug}}"><span class="mb-1 d-inline-block text-gray-800">{{i.course.category.name}}</span></a>
+
+
+                                    <!-- Heading -->
+                                    <div class="position-relative">
+                                        <a href="my-course/{{i.course.slug}}" class="d-block stretched-link"><h4 class="line-clamp-2 h-md-48 h-lg-58 me-md-6 me-lg-10 me-xl-4 mb-2">{{i.course.title}}</h4></a>
+
+                                        
+
+                                        <div class="row mx-n2 align-items-end">
+                                            <div class="col px-2">
+                                                <ul class="nav mx-n3">
+                                                    <li class="nav-item px-3">
+                                                        <div class="d-flex align-items-center">
+                                                            <div class="me-2 d-flex icon-uxs text-secondary">
+                                                                
+
+                                                                
+                                                    
+                                                    <li class="nav-item px-6">
+                                                           Expired on <span>{{i.expiry_date.date}}</span>
+                                                            
+                                                    
+                                                </ul>
+                                            </div>
+
+                                            
+                                        
+                                       
+                                        
+                                        
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
                                                      
                          {% endfor %}
             </div>
@@ -116,18 +186,6 @@
 
         
     </div>
-    <script>
-        // var field = document.getElementsByClassName('date').value;
-        // console.log(field)
-        // console.log(typeof field)
-        // let d = new Date(field);
-        // console.log(d)
-        // let date= field.valueAsDate;
-
-        // console.log(date.toLocaleDateString())
-        // let date_n = new Date(`${field.value}T00:00`);
-        // console.log(date_n)
-
-    </script>
+ 
 
 {% endblock %}

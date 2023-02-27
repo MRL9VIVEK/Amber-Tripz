@@ -44,6 +44,7 @@ urlpatterns = [
     path('number/', views.number_que, name="number"),
     path('next/', views.next_que, name="next"),
     path('mark/', views.mark_que, name="mark"),
+    path('que_page/', views.que_page, name="que_page"),
 
     
 ]+ static(settings.MEDIA_URL,document_root = settings.MEDIA_ROOT)

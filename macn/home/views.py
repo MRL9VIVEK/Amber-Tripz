@@ -3,10 +3,13 @@ from django.shortcuts import render, redirect, HttpResponse
 from home.models import Categories, Course, Level, Video, UserCourse, Payment, Questions, Test, Paper, Time, Answer, Ans, Que, Result, Contact, Ppr, Subject
 from django.template.loader import render_to_string
 from django.http import JsonResponse
+import json
+
 from django.db.models import Sum
 from django.views.decorators.csrf import csrf_exempt
 from.forms import ExamChoiceFrm, AnsChoice, AnsnChoice
 from django.core import serializers
+
 from django.http import JsonResponse
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
@@ -139,8 +142,10 @@ def COURSE_DETAILS(request, slug):
     course_id = Course.objects.get(slug = slug)
     try:
         check_enroll = UserCourse.objects.get(user = request.user, course = course_id)
+        
     except UserCourse.DoesNotExist:
         check_enroll = None
+        
     course = Course.objects.filter(slug = slug)
     if course.exists():
         course = course.first()
@@ -169,14 +174,14 @@ def MY_COURSE(request):
         ex_d = c.expiry_date.date()
         current_date = datetime.today()
         c_d = current_date.date()
-        print(ex_d, c_d )
         diff = ex_d - c_d
-        print(diff.days)
-        if diff.days > 0:
-            print("abhi hum zinda hai")
+        if diff.days >= 0:
+            pass
         else:
-            print("ab kuch ni ho skta")
+            UserCourse.objects.filter(user = request.user, course = c.course).update(status = 0)
+            
     category = Categories.get_all_category(Categories)
+    course = UserCourse.objects.filter(user = request.user)
     
     context = {
         'course': course,
@@ -223,6 +228,7 @@ def instructions(request, slug):
     ppr = Ppr.objects.get(new_slug = slug)
     subject = Subject.objects.filter(course = ppr.course) 
     time = Time.objects.filter(student = request.user, course = ppr.course, ppr = ppr)
+    
     if time :
         pass
         
@@ -239,72 +245,95 @@ def instructions(request, slug):
 
 def Question(request, slug):
     ppr = Ppr.objects.get(new_slug = slug)
-    # print(ppr)
     subject = Subject.objects.filter(course = ppr.course)
-    # print(subject)
     que = Que.objects.filter(course = ppr.course, ppr = ppr)
-    # print(que)
     q = Que.objects.filter(course = ppr.course, ppr = ppr)
+    q_total = Que.objects.filter(course = ppr.course, ppr = ppr).count()
+    
     time = Time.objects.get(student = request.user, course = ppr.course, ppr = ppr)
-    print(time)
+    print(time.time)
+    ans = Ans.objects.filter(student = request.user, course  = ppr.course, ppr = ppr)
+    ans_s = Ans.objects.filter(student = request.user, course  = ppr.course, ppr = ppr).exclude(answer = 'null').count()
+    ans_ns = Ans.objects.filter(student = request.user, course  = ppr.course, ppr = ppr, answer = 'null').count()
+    print(ans, ans_s, ans_ns)
     paginator=Paginator(que, 1)
     page_number = request.GET.get('page', 1)
     que = paginator.get_page(page_number)
-    ansnfrm=AnsnChoice()
-    if request.method=="POST":
-        ansn = request.POST.get('ansn')
+    # ansnfrm=AnsnChoice()
+    # if request.method=="POST":
+        # ansn = request.POST.get('ansn')
         
-        quen = Que.objects.get(course = ppr.course, ppr = ppr, qs_no = page_number)
+        # quen = Que.objects.get(course = ppr.course, ppr = ppr, qs_no = page_number)
         
-        if ansn == quen.answers:
-            s=1
-        elif ansn != quen.answers:
-            s= -1
-        else :
-            s=0
+        # if ansn == quen.answers:
+        #     s=1
+        # elif ansn != quen.answers:
+        #     s= -1
+        # else :
+        #     s=0
         
-        ans = Ans(student=request.user, course = ppr.course, ppr=ppr, que_no = quen.qs_no, que = quen, answer=ansn, correct_answer = quen.answers, score=s)
-        ans.save()
+        # ans = Ans(student=request.user, course = ppr.course, ppr=ppr, que_no = quen.qs_no, que = quen, answer=ansn, correct_answer = quen.answers, score=s)
+        # ans.save()
         
     context = {
         'subject' : subject,
         'ppr' : ppr,
         'que' : que,
-        'ansnfrm' : ansnfrm,
+        'ans' : ans,
+        'ans_s' : ans_s,
+        'ans_ns' : ans_ns,
+        # 'ansnfrm' : ansnfrm,
         'time' : time,
         'q' : q,
+        'q_total' : q_total,
     }
     return render(request, "test/question.html", context)
 
-def number_que(request):
+def que_page(request):
+    if request.method == 'POST':
+        ppr = request.POST['ppr']
+        ppr = Ppr.objects.get(title = ppr)
+        ans_filter = list(Ans.objects.values().filter(ppr = ppr, course = ppr.course))
+        print(ans_filter)
+        return JsonResponse(ans_filter, safe=False)
+    else:
+        return JsonResponse({'status': 0})
 
+def number_que(request):
+    
     if request.method == 'POST':
         sid = request.POST['sid']
-        # print(sid)
+        # print("next q", sid)
         ppr = request.POST['ppr']
-        # print(ppr)
-        
+        opt = request.POST['option']
         que_n = request.POST['q_n']
         q_n = int(que_n)
-        print(q_n)
+        # print("last que:", q_n)
+        # print("last ans:", opt)
         ppr = Ppr.objects.get(title = ppr)
-        # print(ppr.title)
-        # print(ppr.course)
         que = Que.objects.get(course = ppr.course, ppr = ppr, qs_no = sid)
-        # print(que)
         ans_f = Ans.objects.filter(student=request.user, course = ppr.course, ppr=ppr, que_no=q_n) 
         if ans_f:
             ans_c = Ans.objects.get(student=request.user, course = ppr.course, ppr=ppr, que_no=q_n)
-            print(ans_c)
+            # print(ans_c)
         else:
-            pass
+            que_d = Que.objects.get(course = ppr.course, ppr = ppr, qs_no = q_n)
+            # print(que_d)
+            ans = Ans(student=request.user, course = ppr.course, ppr=ppr, que_no=q_n, que = que_d, correct_answer = que_d.answers, answer = 'null')
+            ans.save()
+            # print("last detail:", q_n, opt)
+            # print("not_found")
         getqs=Ans.objects.filter(student=request.user, course = ppr.course, ppr=ppr, que_no=sid)
         if getqs:
             answer = Ans.objects.get(student=request.user, course = ppr.course, ppr=ppr, que_no=sid)
         else:
             answer = Ans(student=request.user, course = ppr.course, ppr=ppr, que_no=sid, answer="null")
-        print(answer)
-        quen = {"qs_no" : que.qs_no, "questions" : que.questions, "option_a" : que.option_a, "option_b" : que.option_b, "option_c" : que.option_c, "option_d" : que.option_d, "answer" : answer.answer}
+        # print(answer)
+        ans_s = Ans.objects.filter(student=request.user, course = ppr.course, ppr=ppr).exclude(answer="null").count()
+        ans_ns = Ans.objects.filter(student=request.user, course = ppr.course, ppr=ppr, answer = "null").count()
+        que_total = Que.objects.filter( course = ppr.course, ppr=ppr).count()
+        # print("total que:", que_total, ans_s, ans_ns)
+        quen = {"qs_no" : que.qs_no, "questions" : que.questions, "option_a" : que.option_a, "option_b" : que.option_b, "option_c" : que.option_c, "option_d" : que.option_d, "answer" : answer.answer, "total_que" : que_total, "total_saved" : ans_s, "not_saved": ans_ns}
         # ansnfrm=AnsnChoice()
         # print(ansnfrm)
         # ans = list(ansnfrm)
@@ -329,6 +358,7 @@ def next_que(request):
         time_r = request.POST['time_r']
         print(time_r)
         
+        
         # print(opt_v)
         ppr = Ppr.objects.get(title = ppr)
         que_a =Que.objects.get(course = ppr.course, ppr = ppr, qs_no = que_n)
@@ -348,6 +378,10 @@ def next_que(request):
             pass
         ans = Ans(student=request.user, course = ppr.course, ppr=ppr, que_no=que_n, que=que_a, answer=opt_v, correct_answer=que_a.answers, score=1)
         ans.save()
+        ans_ns = Ans.objects.filter(course = ppr.course, ppr = ppr, answer = 'null').count()
+        print(ans_ns)
+        ans_s = Ans.objects.filter(course = ppr.course, ppr = ppr).exclude(answer = 'null').count()
+        print(ans_s)
         que_count = Que.objects.filter(course = ppr.course, ppr = ppr).count()
         id = int(sid)
         if id <= que_count :
@@ -357,21 +391,21 @@ def next_que(request):
         # print(ppr.course)
         que = Que.objects.get(course = ppr.course, ppr = ppr, qs_no = sid)
         answer_f = Ans.objects.filter(student=request.user, course = ppr.course, ppr=ppr, que_no=sid)
+        ans_s = Ans.objects.filter(student=request.user, course = ppr.course, ppr=ppr).exclude(answer="null").count()
+        ans_ns = Ans.objects.filter(student=request.user, course = ppr.course, ppr=ppr, answer = "null").count()
+        que_total = Que.objects.filter( course = ppr.course, ppr=ppr).count()
+        print("total que:", que_total)
+        # print("saved:", ans_s)
+        # print("not saved:", ans_ns)
         if answer_f:
             for a in answer_f:
                 print(a.answer)
                 answer = Ans.objects.get(student=request.user, course = ppr.course, ppr=ppr, que_no=sid)
-            
-            
         else:
             answer = Ans(student=request.user, course = ppr.course, ppr=ppr, que_no=sid, answer="null")
             ans = {"que_no" : answer.que_no, "answer" : 'null'}
-            
-
+        quen = {"qs_no" : que.qs_no, "questions" : que.questions, "option_a" : que.option_a, "option_b" : que.option_b, "option_c" : que.option_c, "option_d" : que.option_d, "answer" : answer.answer, "que_no" : answer.que_no, "total_save" : ans_s, "not_saved" : ans_ns, "total" : que_total}
         
-        # print(que)
-        quen = {"qs_no" : que.qs_no, "questions" : que.questions, "option_a" : que.option_a, "option_b" : que.option_b, "option_c" : que.option_c, "option_d" : que.option_d, "answer" : answer.answer, "que_no" : answer.que_no}
-        # answer_n = {"answer": answer}
         return JsonResponse(quen)
     else:
         return JsonResponse({'status': 0})
@@ -380,16 +414,26 @@ def next_que(request):
 def mark_que(request):
     if request.method == 'POST':
         sid = request.POST['sid']
+        q_p = request.POST['q_p']
         ppr = request.POST['ppr']
         ppr = Ppr.objects.get(title = ppr)
+        print(q_p, sid)
         que_count = Que.objects.filter(course = ppr.course, ppr = ppr).count()
         id = int(sid)
         if id <= que_count :
             sid = id
         else:
             sid = 1
-
+        get_ans = Ans.objects.filter(student=request.user, course = ppr.course, ppr=ppr, que_no=q_p)
+        if get_ans:
+            Ans.objects.filter(student = request.user, course = ppr.course, ppr=ppr, que_no=q_p).update(mark = 1)
+            pass
+        else:
+            que =Que.objects.get(course = ppr.course, ppr = ppr, qs_no = q_p)
+            ans = Ans(student=request.user, course = ppr.course, ppr=ppr, que_no=q_p, que = que, correct_answer = que.answers, answer = "null", mark = 1)
+            ans.save()
         que =Que.objects.get(course = ppr.course, ppr = ppr, qs_no = sid)
+        
         print(que)
         answer_f = Ans.objects.filter(student=request.user, course = ppr.course, ppr=ppr, que_no=sid)
         if answer_f:
@@ -399,9 +443,15 @@ def mark_que(request):
             
             
         else:
+            
             answer = Ans(student=request.user, course = ppr.course, ppr=ppr, que_no=sid, answer="null")
             ans = {"que_no" : answer.que_no, "answer" : 'null'}
-        quen = {"qs_no" : que.qs_no, "questions" : que.questions, "option_a" : que.option_a, "option_b" : que.option_b, "option_c" : que.option_c, "option_d" : que.option_d, "answer" : answer.answer}
+        ans_s = Ans.objects.filter(student=request.user, course = ppr.course, ppr=ppr).exclude(answer= "null").count()
+        ans_ns = Ans.objects.filter(student=request.user, course = ppr.course, ppr=ppr, answer= "null").count()
+        print(ans_s, ans_ns)
+        mark_count = Ans.objects.filter(student=request.user, course = ppr.course, ppr=ppr, mark = 1).count()
+        print("mark:", mark_count)
+        quen = {"qs_no" : que.qs_no, "questions" : que.questions, "option_a" : que.option_a, "option_b" : que.option_b, "option_c" : que.option_c, "option_d" : que.option_d, "answer" : answer.answer, "total" : que_count, "saved": ans_s, "not_saved": ans_ns, "mark": mark_count}
         print(quen)
         return JsonResponse(quen)
     else:
@@ -596,7 +646,8 @@ def CHECKOUT(request, slug):
     if course.price == 0:
         current_date = datetime.today()
         print('Current Date: ', current_date)
-        n = 12
+        print(course.validity)
+        n = int(course.validity)
         future_date = current_date + relativedelta(months=n)
         print('Date - 12 months from current date: ', future_date)
         print('Date - 12 months from current date: ', future_date.date())
@@ -680,9 +731,10 @@ def VERIFY_PAYMENT(request):
         payment.signature_id = signature_id
         payment.status = True
         category = Categories.get_all_category(Categories)
+        print(payment.course.validity)
         current_date = datetime.today()
         print('Current Date: ', current_date)
-        n = 12
+        n = int(payment.course.validity)
         future_date = current_date + relativedelta(months=n)
         print('Date - 12 months from current date: ', future_date)
         print('Date - 12 months from current date: ', future_date.date())

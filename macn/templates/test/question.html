@@ -262,13 +262,13 @@
                 </div>
 
                 <div class="box box5">
-                    <div class="attb" style="background-color: green ;">1</div>
+                    <div class="attb" id="saved" style="background-color: green ;">{{ans_s}}</div>
                     <div class="att">Answered</div>
-                    <div class="attb" style="background-color: rgb(201, 45, 110) ;">2</div>
+                    <div class="attb" id="not_answered" style="background-color: rgb(201, 45, 110) ;">{{ans_ns}}</div>
                     <div class="att">Not Answered</div>
-                    <div class="attb" style="background-color: white; color: black;">3</div>
+                    <div class="attb" id="not_visited" style="background-color: white; color: black;">{{q_total}}</div>
                     <div class="att">Not Visited</div>
-                    <div class="attb" style="background-color: rgb(59, 19, 167) ;">4</div>
+                    <div class="attb" id="mark_review" style="background-color: rgb(59, 19, 167) ;">0</div>
                     <div class="att">Mark For Review</div>
 
                 </div>
@@ -279,7 +279,7 @@
                     <div class="que">
                         {% for q in ppr.que_set.all %}
                         <div class="no"><input type="button" 
-                                    class="btn btn_que {{q.qs_no}}" data-sid="{{q.qs_no}}" value="{{q.qs_no}}" /></div>
+                                    class="btn btn_que {{q.qs_no}} " data-sid="{{q.qs_no}}" value="{{q.qs_no}}" /></div>
                         {% endfor %}
                         
                     </div>

@@ -1,7 +1,7 @@
 <script>
     console.log("first page")
     let paper = document.getElementById('ppr')
-        console.log(ppr.innerHTML)
+        // console.log(ppr.innerHTML)
         let csr = $("input[name=csrfmiddlewaretoken]").val();
         mydata = {ppr: ppr.innerHTML, csrfmiddlewaretoken: csr };
         $.ajax({
@@ -9,8 +9,51 @@
             method: "POST",
             data: mydata,
             success: function (data) {
-                console.log("success")
-                console.log(ans_filter.answer)
+
+                
+                for(i=0; i<data.length; i++){
+
+                    
+                    if(data[i].answer === 'null'){
+                        
+                        // console.log(data[i].que_no, data[i].answer)
+                        var que_save = data[i].que_no - 1
+                        var clr = document.getElementsByClassName('btn_que')[que_save]
+                        clr.style.background = 'rgb(192, 44, 113)'
+                        clr.style.color = 'white'
+                    }
+                    else if(data[i].answer === 'A' || data[i].answer === 'B' || data[i].answer === 'C' || data[i].answer === 'D'){
+                        
+                        // console.log(data[i].que_no, data[i].answer)
+                        var que_save = data[i].que_no - 1
+                        var clr = document.getElementsByClassName('btn_que')[que_save]
+                        clr.style.background = 'green'
+                        clr.style.color = 'white'
+                        if(data[i].que_no == 1){
+                            console.log("que 1")
+                            if (data[i].answer == 'A') {
+                                // console.log("option A")
+                                $('#A').prop("checked", "true");
+                            } else if (data[i].answer == 'B') {
+                                // console.log("option B")
+                                $('#B').prop("checked", "true");
+                            } else if (data[i].answer == 'C') {
+                                // console.log("option C")
+                                $('#C').prop("checked", "true");
+                            } else if (data[i].answer == 'D') {
+                                // console.log("option D")
+                                $('#D').prop("checked", "true");
+                            } else {
+                                // console.log("not attempted")
+                            }
+
+                        }
+                    }
+
+                }
+               
+                
+                // console.log(data.ans_filter)
             }
         })
 
@@ -20,7 +63,7 @@
         let qs_no = document.getElementById('q_no')
         let id = parseInt(qs_no.innerHTML);
         let q_no = id + 1;
-        console.log(q_no)
+        // console.log(q_no)
         let paper = document.getElementById('ppr')
         console.log(ppr.innerHTML)
         let que_no = document.getElementById('q_no')

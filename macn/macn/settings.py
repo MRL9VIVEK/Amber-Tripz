@@ -33,6 +33,9 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    
+    "admin_interface",
+    "colorfield",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -40,7 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'home',
-    'acdetail',
+    
     'crispy_forms',
     'rest_framework',
     
@@ -60,6 +63,8 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'macn.urls'
+
+
 
 TEMPLATES = [
     {
@@ -146,7 +151,7 @@ EMAIL_USE_TLS =True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'mrl9viveksahu@gmail.com'
-EMAIL_HOST_PASSWORD = 'slyunhaursxphkdf'
+EMAIL_HOST_PASSWORD = 'ackfqjufvujqgild'
 
 KEY_ID = 'rzp_test_GNDd4iRRcDt9ap'
 KEY_SECRET = 'sD6X9SyH7RTRUYYUR46WWtej'

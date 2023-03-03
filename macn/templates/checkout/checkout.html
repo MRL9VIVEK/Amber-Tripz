@@ -430,7 +430,7 @@ var options = {
     "description": "Payment For {{ course.title }}",
     "image": "https://example.com/your_logo",
     "order_id": "{{ order.id }}", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
-    "callback_url": "http://127.0.0.1:8000/verify_payment",
+    "callback_url": "http://127.0.0.1:8000/payment/verify_payment",
     
     "prefill": {
         "name": "{{ order.notes.name }}",

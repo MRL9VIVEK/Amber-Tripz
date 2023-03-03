@@ -18,7 +18,7 @@
 
 <header class="py-8 py-md-9" style="background-image: none;">
     <div class="container text-center py-xl-2">
-        <h1 class="display-4 fw-semi-bold mb-0">{{course.title}}</h1>
+        <h1 id="course" class="display-4 fw-semi-bold mb-0">{{course.title}}</h1>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb breadcrumb-scroll justify-content-center">
                 <li class="breadcrumb-item">
@@ -48,7 +48,7 @@
                         <img class="rounded shadow-light-lg" src="/{{i.course.featured_image}}" alt="...">
                     </a>
                 </div>
-               
+
 
 
                 <!-- Footer -->
@@ -60,24 +60,26 @@
                     <!-- Heading -->
                     <div class="position-relative">
                         <a class="d-block stretched-link">
-                            <h4 class="line-clamp-2 h-md-48 h-lg-58 me-md-6 me-lg-10 me-xl-4 mb-2">{{ i.title }} </h4>
+                            <h4 id="ppr" class="line-clamp-2 h-md-48 h-lg-58 me-md-6 me-lg-10 me-xl-4 mb-2">{{ i.title }} </h4>
                         </a>
 
                     </div>
-                    
+
                     <div style="display:flex; justify-content: space-between;">
-                        
-                            <a href=""
-                            style="border:4px solid rgba(var(--bs-gigas-rgb)); padding:4px; border-radius: 8px; color:white; background-color: rgba(var(--bs-gigas-rgb)); " onclick="window.open('/instructions/{{i.new_slug}}', toolbar=0, statusbar=0, locationbar=0)">
+
+                        <a href=""
+                            style="border:4px solid rgba(var(--bs-gigas-rgb)); padding:4px; border-radius: 8px; color:white; background-color: rgba(var(--bs-gigas-rgb)); "
+                            onclick="window.open('/instructions/{{i.new_slug}}', toolbar=0, statusbar=0, locationbar=0)">
                             Start Test
                         </a>
-                        
-                            <a href=""
-                            style="border:4px solid rgba(var(--bs-gigas-rgb)); padding:4px; border-radius: 8px; pointer-events: none; cursor: default; color:white; background-color: rgba(var(--bs-gigas-rgb)); " onclick="window.open('/result_explanation/{{i.new_slug}}', toolbar=0, statusbar=0, locationbar=0)">
+
+                        <a href=""
+                            style="border:4px solid rgba(var(--bs-gigas-rgb)); padding:4px; border-radius: 8px;  color:white; background-color: rgba(var(--bs-gigas-rgb)); "
+                            onclick="window.open('/result_explanation/{{i.new_slug}}', toolbar=0, statusbar=0, locationbar=0)">
                             View Result
                         </a>
                     </div>
-                    
+
 
                 </div>
             </div>
@@ -91,15 +93,11 @@
 
 
 <script>
-    
-            // console.log("hello")
-            //   let time = document.getElementById('time')
-            //   console.log(time.textContent)
-            //   distance = time.textContent * 60 * 1000
-            //   console.log(distance)
-            //   sessionStorage.setItem('distance', distance)
-              function onClick(){
-        newWindow = window.open("/result_explanation/{{i.new_slug}}", toolbar=0, statusbar=0, locationbar=0);
+
+    console.log(w)
+
+    function onClick() {
+        newWindow = window.open("/result_explanation/{{i.new_slug}}", toolbar = 0, statusbar = 0, locationbar = 0);
     }
-        </script>
+</script>
 {% endblock %}

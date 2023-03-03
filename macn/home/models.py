@@ -179,12 +179,16 @@ class Que(models.Model):
     ppr = models.ForeignKey(Ppr, on_delete=models.CASCADE,null=True)
     subject = models.CharField(max_length=300, null=True)
     questions=models.TextField(null=True)
-    image = models.ImageField(upload_to='que/images', default="")
+    image = models.ImageField(upload_to='que/images', blank=True, null=True)
     answers=models.CharField(max_length=20, null=True)
     option_a=models.TextField(null=True)
+    image_a = models.ImageField(upload_to='que/images', blank=True, null=True)
     option_b=models.TextField(null=True)
+    image_b = models.ImageField(upload_to='que/images', blank=True, null=True)
     option_c=models.TextField(null=True)
+    image_c = models.ImageField(upload_to='que/images', blank=True, null=True)
     option_d=models.TextField(null=True)
+    image_d = models.ImageField(upload_to='que/images', blank=True, null=True)
     disc=models.TextField(null=True)
     def __str__(self):
         return 'Q.'+ str(self.qs_no)  + ')  '+  self.questions

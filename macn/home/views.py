@@ -4,12 +4,11 @@ from home.models import Categories, Course, Level, Video, UserCourse, Payment, Q
 from django.template.loader import render_to_string
 from django.http import JsonResponse
 import json
-
+from json import dumps
 from django.db.models import Sum
 from django.views.decorators.csrf import csrf_exempt
 from.forms import ExamChoiceFrm, AnsChoice, AnsnChoice
 from django.core import serializers
-
 from django.http import JsonResponse
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
@@ -19,7 +18,6 @@ import numpy as np
 import razorpay
 from time import time
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-
 client = razorpay.Client(auth=(KEY_ID, KEY_SECRET))
 
 
@@ -47,21 +45,14 @@ def contact(request):
     
     if request.method=="POST":
         name = request.POST.get('name')
-        # print(name)
-        
         emailn = request.POST.get('email')
         message = request.POST.get('message')
         contact = Contact(name=name, email=emailn, desc=message, expiry_date = future_date)
-        # print(emailn)
         emailo= Contact.objects.filter(email=emailn)
-        # print(emailo)
         if emailo:
             pass
         else:
             contact.save()
-
-    
-    
     context = {
         'category' : category,
     }
@@ -88,7 +79,7 @@ def single_course(request):
         'FreeCourse_count' : FreeCourse_count,
         'PaidCourse_count' : PaidCourse_count,
     }
-    return render(request, 'main/single_course.html', context)
+    return render(request, 'course/single_course.html', context)
 
 
 def filter_data(request):
@@ -96,21 +87,16 @@ def filter_data(request):
     level = request.GET.getlist('level[]')
     price = request.GET.getlist('price[]')
     print(price)
-
     if price == ['PriceFree']:
        course = Course.objects.filter(price=0)
     elif price == ['PricePaid']:
        course = Course.objects.filter(price__gte=1)
     elif price == ['PriceAll']:
        course = Course.objects.all()
-
-
     elif category:
        course = Course.objects.filter(category__id__in=category).order_by('-id')
-
     elif level:
        course = Course.objects.filter(level__id__in = level).order_by('-id')
-       
     else:
        course = Course.objects.all().order_by('-id')
 
@@ -124,11 +110,8 @@ def filter_data(request):
 
 def SEARCH_COURSE(request):
     category = Categories.get_all_category(Categories)
-    
     query = request.GET['query']
-    print(query)
     course = Course.objects.filter(title__icontains = query)
-    print(course)
     context = {
         'course':course,
         'category' : category,
@@ -202,6 +185,9 @@ def MY_COURSE_SLUG(request, slug):
     }
     return render(request, "profile/profile.html", context)
 
+def WATCH_COURSE(request, slug):
+    return render(request, 'course/watch_course.html')
+
 def MY_TEST_SERIES(request):
     course = UserCourse.objects.filter(user = request.user)
     category = Categories.get_all_category(Categories)
@@ -224,14 +210,13 @@ def MY_TEST_SERIES_SLUG(request, slug):
     }
     return render(request, "profile/online_test.html", context)
 
+
 def instructions(request, slug):
     ppr = Ppr.objects.get(new_slug = slug)
     subject = Subject.objects.filter(course = ppr.course) 
     time = Time.objects.filter(student = request.user, course = ppr.course, ppr = ppr)
-    
     if time :
         pass
-        
     else:
         time = Time(student = request.user, course = ppr.course, ppr = ppr, time = ppr.time_duration)
         time.save()
@@ -243,23 +228,20 @@ def instructions(request, slug):
     }
     return render(request, "test/instructions.html", context)
 
+
 def Question(request, slug):
     ppr = Ppr.objects.get(new_slug = slug)
     subject = Subject.objects.filter(course = ppr.course)
     que = Que.objects.filter(course = ppr.course, ppr = ppr)
     q = Que.objects.filter(course = ppr.course, ppr = ppr)
     q_total = Que.objects.filter(course = ppr.course, ppr = ppr).count()
-    
     time = Time.objects.get(student = request.user, course = ppr.course, ppr = ppr)
-    print(time.time)
     ans = Ans.objects.filter(student = request.user, course  = ppr.course, ppr = ppr)
     ans_s = Ans.objects.filter(student = request.user, course  = ppr.course, ppr = ppr).exclude(answer = 'null').count()
     ans_ns = Ans.objects.filter(student = request.user, course  = ppr.course, ppr = ppr, answer = 'null').count()
-    print(ans, ans_s, ans_ns)
     paginator=Paginator(que, 1)
     page_number = request.GET.get('page', 1)
     que = paginator.get_page(page_number)
-    # ansnfrm=AnsnChoice()
     # if request.method=="POST":
         # ansn = request.POST.get('ansn')
         
@@ -292,6 +274,7 @@ def Question(request, slug):
 def que_page(request):
     if request.method == 'POST':
         ppr = request.POST['ppr']
+        print(type(ppr))
         ppr = Ppr.objects.get(title = ppr)
         ans_filter = list(Ans.objects.values().filter(ppr = ppr, course = ppr.course))
         print(ans_filter)
@@ -345,9 +328,6 @@ def number_que(request):
     else:
         return JsonResponse({'status': 0})
         
-        # que_detail = {"qs_no": que.qs_no, "course": que.course, "ppr": que.ppr, "questions": que.questions, "answers":que.answers, "option_a": que.option_a, "option_b": que.option_b, "option_c": que.option_c, "option_d": que.option_d, "disc": que.disc}
-        # return JsonResponse(que_detail)
-
 
 def next_que(request):
     if request.method == 'POST':
@@ -356,14 +336,8 @@ def next_que(request):
         que_n = request.POST['que']
         opt_v = request.POST['ans']
         time_r = request.POST['time_r']
-        print(time_r)
-        
-        
-        # print(opt_v)
         ppr = Ppr.objects.get(title = ppr)
         que_a =Que.objects.get(course = ppr.course, ppr = ppr, qs_no = que_n)
-        # print(que_a.answers)
-        # print(que_a)
         time = Time.objects.filter(student=request.user, course = ppr.course, ppr=ppr)
         if time:
             time.delete()
@@ -376,7 +350,12 @@ def next_que(request):
             getqs.delete()
         else:
             pass
-        ans = Ans(student=request.user, course = ppr.course, ppr=ppr, que_no=que_n, que=que_a, answer=opt_v, correct_answer=que_a.answers, score=1)
+        if opt_v == que_a.answers:
+            ans = Ans(student=request.user, course = ppr.course, ppr=ppr, que_no=que_n, que=que_a, answer=opt_v, correct_answer=que_a.answers, score=1)
+        elif opt_v == 'null':
+            ans = Ans(student=request.user, course = ppr.course, ppr=ppr, que_no=que_n, que=que_a, answer=opt_v, correct_answer=que_a.answers, score=0)
+        else: 
+            ans = Ans(student=request.user, course = ppr.course, ppr=ppr, que_no=que_n, que=que_a, answer=opt_v, correct_answer=que_a.answers, score=-1)
         ans.save()
         ans_ns = Ans.objects.filter(course = ppr.course, ppr = ppr, answer = 'null').count()
         print(ans_ns)
@@ -468,7 +447,6 @@ def SUBMIT(request, slug):
     ppr = Ppr.objects.get(new_slug = slug)
     time = Time.objects.filter(student = request.user, course = ppr.course, ppr=ppr).delete()
     time = Time(student = request.user, course = ppr.course, ppr=ppr, time = 0 )
-    
     time.save()
     correct_answer = Ans.objects.filter(student = request.user, course = ppr.course, ppr=ppr, score = 1).count()
     wrong_answer = Ans.objects.filter(student = request.user, course = ppr.course, ppr=ppr, score = -1).count()
@@ -482,87 +460,87 @@ def SUBMIT(request, slug):
     return render(request, "test/submit.html", context)
     
 
-def QUESTIONS(request, slug):
-    ppr = Ppr.objects.get(new_slug = slug)
-    que = Que.objects.filter(ppr=ppr)
-    paginator=Paginator(que, 1)
-    page_number = request.GET.get('page', 1)
-    que = paginator.get_page(page_number)
-    quen = Que.objects.filter(qs_no=page_number, ppr=ppr)[0]
-    time = Time.objects.filter(student=request.user, ppr=ppr)
+# def QUESTIONS(request, slug):
+#     ppr = Ppr.objects.get(new_slug = slug)
+#     que = Que.objects.filter(ppr=ppr)
+#     paginator=Paginator(que, 1)
+#     page_number = request.GET.get('page', 1)
+#     que = paginator.get_page(page_number)
+#     quen = Que.objects.filter(qs_no=page_number, ppr=ppr)[0]
+#     time = Time.objects.filter(student=request.user, ppr=ppr)
     
-    if time:
-        pass
-    else:
-        time = Time(student=request.user,  ppr=ppr, time=ppr.time_duration * 60 * 1000)
-        time.save()
-    time_n = Time.objects.filter(student=request.user, ppr=ppr)
-    for i in time_n:
-        print(i.time)
+#     if time:
+#         pass
+#     else:
+#         time = Time(student=request.user,  ppr=ppr, time=ppr.time_duration * 60 * 1000)
+#         time.save()
+#     time_n = Time.objects.filter(student=request.user, ppr=ppr)
+#     for i in time_n:
+#         print(i.time)
         
     
-    if request.method=='POST':
-            getqs=Ans.objects.filter(que=quen, student=request.user, ppr=ppr).delete()
+#     if request.method=='POST':
+#             getqs=Ans.objects.filter(que=quen, student=request.user, ppr=ppr).delete()
             
-            form=AnsnChoice(request.POST or None)
-            if form.is_valid():
-                quens = Que.objects.filter(qs_no=page_number, ppr=ppr)
-                for a in quens:
-                    print(a.answers)
-                    print(a.qs_no)
-                ansn=form.cleaned_data.get('ansn')
-                print(ansn)
-                if ansn==a.answers:
-                    ans = Ans(student=request.user,que_no=a.qs_no, que=quen, ppr=ppr, answer=ansn, correct_answer=a.answers, score=1)
-                    ans.save()
-                elif ansn!=a.answers:
-                    ans = Ans(student=request.user,que_no=a.qs_no, que=quen, ppr=ppr, answer=ansn, correct_answer=a.answers, score=-1)
-                    ans.save()
-                else:
-                    ans = Ans(student=request.user,que_no=a.qs_no, que=quen, ppr=ppr, answer=ansn, correct_answer=a.answers, score=0)
-                    ans.save()
-    ansnfrm=AnsnChoice()
-    context = {
-        'ansnfrm' : ansnfrm,
-        'ppr' : ppr,
-        'que' :que,
-        'time_n' : time_n,        
-    }
-    return render(request, "profile/question_n.html", context)
+#             form=AnsnChoice(request.POST or None)
+#             if form.is_valid():
+#                 quens = Que.objects.filter(qs_no=page_number, ppr=ppr)
+#                 for a in quens:
+#                     print(a.answers)
+#                     print(a.qs_no)
+#                 ansn=form.cleaned_data.get('ansn')
+#                 print(ansn)
+#                 if ansn==a.answers:
+#                     ans = Ans(student=request.user,que_no=a.qs_no, que=quen, ppr=ppr, answer=ansn, correct_answer=a.answers, score=1)
+#                     ans.save()
+#                 elif ansn!=a.answers:
+#                     ans = Ans(student=request.user,que_no=a.qs_no, que=quen, ppr=ppr, answer=ansn, correct_answer=a.answers, score=-1)
+#                     ans.save()
+#                 else:
+#                     ans = Ans(student=request.user,que_no=a.qs_no, que=quen, ppr=ppr, answer=ansn, correct_answer=a.answers, score=0)
+#                     ans.save()
+#     ansnfrm=AnsnChoice()
+#     context = {
+#         'ansnfrm' : ansnfrm,
+#         'ppr' : ppr,
+#         'que' :que,
+#         'time_n' : time_n,        
+#     }
+#     return render(request, "profile/question_n.html", context)
 
-def RESULT(request, slug):
-    ppr = Ppr.objects.get(new_slug = slug)
-    print(ppr)
-    result = Result.objects.filter(student = request.user, ppr = ppr)
-    print(result)
-    if(result):
-        pass
-    else:
-        correct_answer = Ans.objects.filter(ppr=ppr, score=1).count()
-        wrong_answer = Ans.objects.filter(ppr=ppr, score=-1).count()
-        print(wrong_answer)
-        not_answer = Ans.objects.filter(ppr=ppr, score=0).count()
-        print(not_answer)
-        result = Result(student = request.user, ppr = ppr, correct_answer = correct_answer, wrong_answer = wrong_answer, not_answer = not_answer)
-        result.save()
-    context={
-        'result': result,
-        'ppr': ppr,
-        'time' : time
-    }
-    return render(request, 'profile/result.html', context)
+# def RESULT(request, slug):
+#     ppr = Ppr.objects.get(new_slug = slug)
+#     print(ppr)
+#     result = Result.objects.filter(student = request.user, ppr = ppr)
+#     print(result)
+#     if(result):
+#         pass
+#     else:
+#         correct_answer = Ans.objects.filter(ppr=ppr, score=1).count()
+#         wrong_answer = Ans.objects.filter(ppr=ppr, score=-1).count()
+#         print(wrong_answer)
+#         not_answer = Ans.objects.filter(ppr=ppr, score=0).count()
+#         print(not_answer)
+#         result = Result(student = request.user, ppr = ppr, correct_answer = correct_answer, wrong_answer = wrong_answer, not_answer = not_answer)
+#         result.save()
+#     context={
+#         'result': result,
+#         'ppr': ppr,
+#         'time' : time
+#     }
+#     return render(request, 'profile/result.html', context)
 
 
-def SCORE_CARD(request, slug):
+# def SCORE_CARD(request, slug):
     
-    ppr = Ppr.objects.get(new_slug = slug)
-    print(ppr.title)
-    ans = Ans.objects.filter(student = request.user, ppr = ppr)
-    context={
-        'ans':ans,
-        'ppr' : ppr,
-    }
-    return render(request, 'profile/score_card.html', context)
+#     ppr = Ppr.objects.get(new_slug = slug)
+#     print(ppr.title)
+#     ans = Ans.objects.filter(student = request.user, ppr = ppr)
+#     context={
+#         'ans':ans,
+#         'ppr' : ppr,
+#     }
+#     return render(request, 'profile/score_card.html', context)
 
 
     
@@ -573,7 +551,7 @@ def MY_VIDEOS(request):
         'course': course,
         'category': category,
     }
-    return render(request,'profile/my_videos.html', context)
+    return render(request,'video/my_videos.html', context)
 
 def MY_VIDEOS_SLUG(request, slug):
     course = Course.objects.get(slug = slug)
@@ -586,7 +564,7 @@ def MY_VIDEOS_SLUG(request, slug):
     'category' : category,
     'subject' : subject
     }
-    return render(request, "profile/my_videos_d.html", context)
+    return render(request, "video/my_videos_d.html", context)
 
 def video_lecture(request, slug):
     subject = Subject.objects.get(slug_s = slug)
@@ -594,7 +572,7 @@ def video_lecture(request, slug):
     context = {
         'subject' : subject,
     }
-    return render(request,"profile/my_videos_sub.html", context)
+    return render(request,"video/my_videos_sub.html", context)
 
 
 
@@ -606,7 +584,7 @@ def MY_E_BOOKS(request):
         'category': category,
 
     }
-    return render(request,'profile/my_e-books.html', context)
+    return render(request,'e-book/my_e-books.html', context)
 
 
 
@@ -620,21 +598,16 @@ def MY_E_BOOKS_SLUG(request, slug):
     'category' : category,
     'subject' : subject
     }
-    return render(request, "profile/my_e-books_d.html", context)
+    return render(request, "e-book/my_e-books_d.html", context)
 
 
 def E_BOOK(request, slug):
     subject = Subject.objects.get(slug_s = slug)
     print(subject)
-    
     context ={
         'subject' : subject,
     }
-    return render(request, "profile/e_book_sub.html", context)
-
-
-
-
+    return render(request, "e-book/e_book_sub.html", context)
 
 def CHECKOUT(request, slug):
     course = Course.objects.get(slug = slug)
@@ -795,93 +768,92 @@ def VERIFY_PAYMENT(request):
             # return render(request, 'verify_payment/fail.html')
 
             
-def WATCH_COURSE(request, slug):
-    return render(request, 'course/watch_course.html')
 
 
-def TEST_SERIES(request):
-    try:
-        exam=Answer.objects.filter(student=request.user)[0].question
+
+# def TEST_SERIES(request):
+#     try:
+#         exam=Answer.objects.filter(student=request.user)[0].question
         
-    except:
-        msg="Select Course And Paper"
-    if request.method=='POST':
-        form=ExamChoiceFrm(request.POST or None)
-        if form.is_valid():
+#     except:
+#         msg="Select Course And Paper"
+#     if request.method=='POST':
+#         form=ExamChoiceFrm(request.POST or None)
+#         if form.is_valid():
             
-            test=Test.objects.filter(test=form.cleaned_data.get('test'))[0]
-            request.session['test']=test.id
-            paper=Paper.objects.filter(paper=form.cleaned_data.get('paper'))[0]
-            request.session['paper']=paper.id
-            if test == exam.test and paper == exam.paper:
-                form=ExamChoiceFrm()
-                context={
-                    'form': form,
-                    'msg': 'Exam Already Completed' ,
-                }
-                return render(request, 'profile/test_series.html', context)
+#             test=Test.objects.filter(test=form.cleaned_data.get('test'))[0]
+#             request.session['test']=test.id
+#             paper=Paper.objects.filter(paper=form.cleaned_data.get('paper'))[0]
+#             request.session['paper']=paper.id
+#             if test == exam.test and paper == exam.paper:
+#                 form=ExamChoiceFrm()
+#                 context={
+#                     'form': form,
+#                     'msg': 'Exam Already Completed' ,
+#                 }
+#                 return render(request, 'profile/test_series.html', context)
                 
-            else:
-                try:
-                    qs = Questions.objects.filter(test=test, paper=paper)
-                    context ={
-                        'questions': qs,
-                        'qs': qs[0],
-                    }
-                    return render(request, 'profile/question.html', context)
-                except:
-                    form=ExamChoiceFrm()
-                    context={
-                        'form': form,
-                        'msg': 'No Question Paper Found' ,
-                    }
-                    return render(request, 'profile/test_series.html', context)
-    form=ExamChoiceFrm()
-    msg=""
-    context={
-        'form': form,
-        'msg': msg,
-    }
-    return render(request, 'profile/test_series.html', context)
+#             else:
+#                 try:
+#                     qs = Questions.objects.filter(test=test, paper=paper)
+#                     context ={
+#                         'questions': qs,
+#                         'qs': qs[0],
+#                     }
+#                     return render(request, 'profile/question.html', context)
+#                 except:
+#                     form=ExamChoiceFrm()
+#                     context={
+#                         'form': form,
+#                         'msg': 'No Question Paper Found' ,
+#                     }
+#                     return render(request, 'profile/test_series.html', context)
+#     form=ExamChoiceFrm()
+#     msg=""
+#     context={
+#         'form': form,
+#         'msg': msg,
+#     }
+#     return render(request, 'profile/test_series.html', context)
 
-def MY_PROFILE(request):
-    return render(request, 'profile/my_profile.html')
+# def MY_PROFILE(request):
+#     return render(request, 'profile/my_profile.html')
 
 
 
-def exam_home(request, qno):
-    paper=request.session['paper']
-    test=request.session['test']
-    qts= Questions.objects.filter(test=test, paper=paper)
-    try:
-        qs=Questions.objects.filter(qs_no=qno)[0]
-    except:
-        qs=Questions.objects.filter(qs_no=1)[0]
-    getqs=Answer.objects.filter(question=qs, student=request.user)
-    print(getqs)
-    if getqs:
-        msg="Already Answered"
-        request.session['msg']=msg
-    else:
-        if request.method=='POST':
-            form=AnsChoice(request.POST or None)
-            if form.is_valid():
-                ans=form.cleaned_data.get('ans')
-                ansqs = Answer (
-                    student=request.user,
-                    question=qs,
-                    answer=ans
-                )
-                ansqs.save()
-                nqno=int(qno) + 1
-                print(nqno)
-                request.session['msg']="Ans Saved Successfully"
-                return redirect('exam_home', nqno)
-    ansfrm= AnsChoice()
-    context ={
-        'ansfrm': ansfrm,
-        'questions': qts,
-        'qs': qs,
-        }
-    return render(request, 'profile/question.html', context)
+# def exam_home(request, qno):
+#     paper=request.session['paper']
+#     test=request.session['test']
+#     qts= Questions.objects.filter(test=test, paper=paper)
+#     try:
+#         qs=Questions.objects.filter(qs_no=qno)[0]
+#     except:
+#         qs=Questions.objects.filter(qs_no=1)[0]
+#     getqs=Answer.objects.filter(question=qs, student=request.user)
+#     print(getqs)
+#     if getqs:
+#         msg="Already Answered"
+#         request.session['msg']=msg
+#     else:
+#         if request.method=='POST':
+#             form=AnsChoice(request.POST or None)
+#             if form.is_valid():
+#                 ans=form.cleaned_data.get('ans')
+#                 ansqs = Answer (
+#                     student=request.user,
+#                     question=qs,
+#                     answer=ans
+#                 )
+#                 ansqs.save()
+#                 nqno=int(qno) + 1
+#                 print(nqno)
+#                 request.session['msg']="Ans Saved Successfully"
+#                 return redirect('exam_home', nqno)
+#     ansfrm= AnsChoice()
+#     context ={
+#         'ansfrm': ansfrm,
+#         'questions': qts,
+#         'qs': qs,
+#         }
+#     return render(request, 'profile/question.html', context)
     

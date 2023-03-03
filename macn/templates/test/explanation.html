@@ -4,9 +4,255 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Grid</title>
+    <style>
+        .container{
+            display:grid;
+            background-color: whitesmoke;
+            /* height:500px; */
+            /* width:600px; */
+            /* grid-row-gap: 5px;
+            grid-column-gap: 5px; */
+            grid-gap: 2px 2px;
+            /* grid-template-columns: 200px 150px 155px; */
+            /* grid-template-rows: 66px 33px; */
+            /* grid-template-columns: auto auto auto auto; */
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            grid-template-rows: 70px 80px 175px 225px 80px;
+            /* justify-content:space-evenly; */
+            
+        }
+        *{
+            padding: 0;
+            margin: 0;
+        }
+        .box{
+            background-color: whitesmoke;
+            border: 2px solid rgb(192, 180, 247);
+            
+            /* text-align: center; */
+        }
+        .box1{
+            grid-column-start: 1;
+            grid-column-end: 2;
+            background-color: #6161ea;
+            color:white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .boxt{
+            display:flex;
+            align-items: center;
+            grid-column-start: 2;
+            grid-column-end: 4;
+            background-color: #6161ea;
+            color:white;
+            padding: 10px;
+        }
+        .boxl{
+            
+            grid-column-start: 4;
+            grid-column-end: 5;
+            background-color: #6161ea;
+            color:white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            
+        }
+        .box2{
+            grid-column-start: 1;
+            grid-column-end: 4;
+            display:flex;
+            justify-content: space-around;
+            align-content: center;
+            align-items: center;
+            
+            
+        }
+        .box3{
+            display:flex;
+            justify-content: center;
+            align-items: center;
+
+        }
+        .box4{
+            grid-column-start: 1;
+            grid-column-end: 4;
+            grid-row-start:3;
+            grid-row-end:5;
+        }
+        .box7{
+            grid-column-start: 1;
+            grid-column-end: 4;
+        }
+        .sub{
+            display: flex;
+            /* border : 2px solid black; */
+            background-color: #6161ea;
+            color:white;
+            justify-content: center;
+            align-items: center;
+            margin:3px;
+
+            padding-left: 10px;
+            padding-right: 10px;
+            height: 40px;
+        }
+        .box4{
+            padding:10px;
+            font-size: 20px;
+            margin:10px;
+            overflow:auto;
+        }
+        .box5{
+            display:grid;
+            grid-template-columns: 50px auto;
+            grid-template-rows: auto auto;
+            text-align: center;
+            /* justify-content: center; */
+            
+        }
+        .attb{
+            display:flex;
+            justify-content: center;
+            align-items: center;
+            /* border: 2px solid black; */
+            border-radius:50%;
+            margin: 5px;
+            color:white;
+        }
+        .att{
+            margin: 5px;
+        }
+        .que{
+            display:grid;
+            /* border: 2px solid black; */
+            grid-template-columns: 30px 30px 30px 30px;
+            grid-template-rows: auto auto;
+            text-align: center;
+            justify-content: space-around;
+            grid-row-gap: 20px;
+            /* overflow: auto; */
+            
+            
+        }
+        /* .no{
+            
+            border-radius: 50%;
+            background-color: white;
+            font-size: larger;
+            padding:5px;
+        } */
+        .box7{
+            display:flex;
+            
+            align-items: center;
+        }
+        .box8{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            
+        }
+        .status{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgb(192, 44, 113);
+            padding: 15px; 
+            color:white;
+            margin: 5px;
+            border: 1px solid rgb(192, 44, 113);
+
+        }
+        .button {
+            font-size: 12px;
+            width: 30px;
+            height: 30px;
+            border: 1px solid white;
+            border-radius: 50%;
+            background-color: white;
+            font-size: large;
+        }
+    </style>
 </head>
 <body>
-    result
+    <div class="container">
+        <div class="box box1">Amber Tripz</div>
+        <div class="box boxt">SSC CGL T-1 2022 Practice Test</div>
+        <div class="box boxl">mrl9vivesahu@gail.com</div>
+
+        <div class="box box2">
+            <div class="sub">General Intelligence and Reasoning</div>
+            <div class="sub">General Awareness</div>
+            <div class="sub">Quantitative Aptitude</div>
+            <div class="sub">English Comprehensive</div>
+        </div>
+        <div class="box box3">Time Left : 30:00</div>
+        <div class="box box4" style="padding:6px;">
+            <div>
+            The ratio of efficiency of P is to R is 7 : 4 and the ratio of number of days taken by Q is to R is 2 : 3 while working alone P takes 9 days less than R to complete the work. If Q and R started the work and left after 2 days then find the number of days taken by P to finish the remaining work?
+        </div>
+        <br>
+        <br>
+
+        <div><input type="radio" name="answer" /> A. &nbsp 64/7 days</div>
+        <br>
+        <div><input type="radio" name="answer" /> B. &nbsp  8 days</div>
+        <br>
+        <div><input type="radio" name="answer" /> C. &nbsp  32/7 days</div>
+        <br>
+        <div><input type="radio" name="answer" /> D. &nbsp 128/7 days</div>
+        </div>
+        <div class="box box5">
+            <div class="attb" style="background-color: green ;">1</div>
+            <div class="att">Answered</div>
+            <div class="attb" style="background-color: rgb(201, 45, 110) ;">2</div>
+            <div class="att">Not Answered</div>
+            <div class="attb" style="background-color: rgb(69, 70, 69);">3</div>
+            <div class="att">Not Visited</div>
+            <div class="attb" style="background-color: rgb(59, 19, 167) ;">4</div>
+            <div class="att">Mark For Review</div>
+            
+        </div>
+        <div class="box" style="background-color: rgb(190, 241, 241); overflow:auto;">
+            <br>
+            <div style="margin-left: 10px;">Choose a Question:</div>
+            <br>
+            <div class="que">
+                <div class="no"><a href=""><button class="button">1</button></a></div>
+                <div class="no"><a href=""><button class="button">2</button></a></div>
+                <div class="no"><a href=""><button class="button">3</button></a></div>
+                <div class="no"><a href=""><button class="button">4</button></a></div>
+                <div class="no"><a href=""><button class="button">5</button></a></div>
+                <div class="no"><a href=""><button class="button">6</button></a></div>
+                <div class="no"><a href=""><button class="button">7</button></a></div>
+                <div class="no"><a href=""><button class="button">8</button></a></div>
+                <div class="no"><a href=""><button class="button">9</button></a></div>
+                <div class="no"><a href=""><button class="button">10</button></a></div>
+                <div class="no"><a href=""><button class="button">11</button></a></div>
+                <div class="no"><a href=""><button class="button">12</button></a></div>
+                <div class="no"><a href=""><button class="button">13</button></a></div>
+                <div class="no"><a href=""><button class="button">14</button></a></div>
+                <div class="no"><a href=""><button class="button">15</button></a></div>
+                <div class="no"><a href=""><button class="button">16</button></a></div>
+                <div class="no"><a href=""><button class="button">17</button></a></div>
+                <div class="no"><a href=""><button class="button">18</button></a></div>
+                <div class="no"><a href=""><button class="button">19</button></a></div>
+                <div class="no"><a href=""><button class="button">20</button></a></div>
+                 </div>
+        </div>
+        <div class="box box7" >
+            <div class=""><button class="status">Clear Response</button></div>
+            <div class=""><button class="status">Mark For Review and Next</button></div>
+            <div class=""><a href=""><button class="status">Save and Next</button></a></div>
+        </div>
+        <div class="box box8">
+            <div style="background-color: rgb(192, 44, 113);padding: 15px; color:white;">Submit</div>
+        </div> 
+        
+    </div>
 </body>
 </html>

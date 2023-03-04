@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.shortcuts import render, redirect, HttpResponse
-from home.models import Categories, Course, Level, Video, UserCourse, Payment, Questions, Test, Paper, Time, Answer, Ans, Que, Result, Contact, Ppr, Subject
+from home.models import Categories, Course, Level, Video, UserCourse, Questions, Test, Paper, Time, Answer, Ans, Que, Result, Contact, Ppr, Subject
+from payment.models import Payment
 from django.template.loader import render_to_string
 from django.http import JsonResponse
 import json
@@ -35,19 +36,12 @@ def home(request):
 
 def contact(request):
     category = Categories.get_all_category(Categories)
-    current_date = datetime.today()
-    print('Current Date: ', current_date)
-    n = 12
-    future_date = current_date + relativedelta(months=n)
-    print('Date - 12 months from current date: ', future_date)
-    print('Date - 12 months from current date: ', future_date.date())
-    print('Date - 12 months from current date: ', future_date.time())
     
     if request.method=="POST":
         name = request.POST.get('name')
         emailn = request.POST.get('email')
         message = request.POST.get('message')
-        contact = Contact(name=name, email=emailn, desc=message, expiry_date = future_date)
+        contact = Contact(name=name, email=emailn, desc=message)
         emailo= Contact.objects.filter(email=emailn)
         if emailo:
             pass
@@ -451,6 +445,11 @@ def SUBMIT(request, slug):
     correct_answer = Ans.objects.filter(student = request.user, course = ppr.course, ppr=ppr, score = 1).count()
     wrong_answer = Ans.objects.filter(student = request.user, course = ppr.course, ppr=ppr, score = -1).count()
     not_answer = Ans.objects.filter(student = request.user, course = ppr.course, ppr=ppr, score = 0).count()
+    res_f = Result.objects.filter(student = request.user, course = ppr.course, ppr=ppr)
+    if res_f:
+        Result.objects.filter(student = request.user, course = ppr.course, ppr=ppr).delete()
+    else:
+        pass
     result = Result(student = request.user, course = ppr.course, ppr=ppr, correct_answer= correct_answer, wrong_answer = wrong_answer, not_answer = not_answer)
     result.save()
     print(result)

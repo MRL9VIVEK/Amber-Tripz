@@ -243,26 +243,24 @@ class UserCourse(models.Model):
 
 
 
-class Payment(models.Model):
-    order_id = models.CharField(max_length=100,null=True, blank=True)
-    payment_id = models.CharField(max_length=100,null=True, blank=True)
-    signature_id = models.CharField(max_length=100,null=True, blank=True)
-    user_course = models.ForeignKey(UserCourse, on_delete=models.CASCADE, null=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, null=True)
-    date = models.DateTimeField(auto_now_add=True)
-    status = models.BooleanField(default=False)
+# class Payment(models.Model):
+#     order_id = models.CharField(max_length=100,null=True, blank=True)
+#     payment_id = models.CharField(max_length=100,null=True, blank=True)
+#     signature_id = models.CharField(max_length=100,null=True, blank=True)
+#     user_course = models.ForeignKey(UserCourse, on_delete=models.CASCADE, null=True)
+#     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+#     course = models.ForeignKey(Course, on_delete=models.CASCADE, null=True)
+#     date = models.DateTimeField(auto_now_add=True)
+#     status = models.BooleanField(default=False)
 
-    def __str__(self):
-        return self.user.first_name + " " + self.course.title
+#     def __str__(self):
+#         return self.user.first_name + " " + self.course.title
 
 
 class Contact(models.Model):
     name = models.CharField(max_length=50,null=True, blank=True)
     email = models.CharField(max_length=70, null=True, blank=True)
     desc = models.CharField(max_length=500, null=True, blank=True)
-    
-    expiry_date = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return self.email

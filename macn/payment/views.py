@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.shortcuts import render, redirect, HttpResponse
-from home.models import Categories, Course, UserCourse, Payment
+from home.models import Categories, Course, UserCourse
+from payment.models import Payment
 from django.template.loader import render_to_string
 from django.http import JsonResponse
 import json

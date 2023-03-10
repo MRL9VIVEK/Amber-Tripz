@@ -7,5 +7,7 @@ urlpatterns = [
     path('register', views.REGISTER, name= "register"),
     path('dologin', views.DO_LOGIN, name= "dologin"),
     path('profile', views.PROFILE, name= "profile"),
+    path('name', views.name, name= "name"),
+    
     path('profile/update', views.PROFILE_UPDATE, name= "profile_update"),
 ]

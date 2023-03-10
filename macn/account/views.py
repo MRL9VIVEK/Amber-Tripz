@@ -28,14 +28,14 @@ def REGISTER(request):
             email=email,
         )
         user.set_password(password)
-        subject = "Welcome To Amber Tripz"
-        message = f'Hi {username} you have successfully created your Account'
-        from_email = settings.EMAIL_HOST_USER
-        recipient_list = [email]
-        send_mail(subject, message, from_email, recipient_list, fail_silently=False)
+        # subject = "Welcome To Amber Tripz"
+        # message = f'Hi {username} you have successfully created your Account'
+        # from_email = settings.EMAIL_HOST_USER
+        # recipient_list = [email]
+        # send_mail(subject, message, from_email, recipient_list, fail_silently=False)
         user.save()
         return redirect('login')
-    return render(request, 'registration/register.html')
+    return render(request, 'register/register.html')
 
 
 def DO_LOGIN(request):
@@ -77,3 +77,7 @@ def PROFILE_UPDATE(request):
         user.save()
         messages.success(request,'Profile Are Successfully Updated. ')
         return redirect('profile')
+
+
+def name(request):
+    return render(request, 'profile.html')

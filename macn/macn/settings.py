@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'home',
     'payment',
+    'account',
     
     'crispy_forms',
     'rest_framework',
@@ -70,7 +71,8 @@ ROOT_URLCONF = 'macn.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['templates'],
+        'DIRS': ['templates', 'account/templates', 'payment/templates'],
+        
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

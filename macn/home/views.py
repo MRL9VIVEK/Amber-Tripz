@@ -236,21 +236,7 @@ def Question(request, slug):
     paginator=Paginator(que, 1)
     page_number = request.GET.get('page', 1)
     que = paginator.get_page(page_number)
-    # if request.method=="POST":
-        # ansn = request.POST.get('ansn')
-        
-        # quen = Que.objects.get(course = ppr.course, ppr = ppr, qs_no = page_number)
-        
-        # if ansn == quen.answers:
-        #     s=1
-        # elif ansn != quen.answers:
-        #     s= -1
-        # else :
-        #     s=0
-        
-        # ans = Ans(student=request.user, course = ppr.course, ppr=ppr, que_no = quen.qs_no, que = quen, answer=ansn, correct_answer = quen.answers, score=s)
-        # ans.save()
-        
+   
     context = {
         'subject' : subject,
         'ppr' : ppr,
@@ -265,15 +251,69 @@ def Question(request, slug):
     }
     return render(request, "test/question.html", context)
 
+
+def result_d(request, slug):
+    ppr = Ppr.objects.get(new_slug = slug)
+    subject = Subject.objects.filter(course = ppr.course) 
+    que = Que.objects.filter(course = ppr.course, ppr = ppr)
+    paginator=Paginator(que, 1)
+    page_number = request.GET.get('page', 1)
+    que = paginator.get_page(page_number)
+    ans = Ans.objects.filter(student = request.user, course  = ppr.course, ppr = ppr)
+    q_total = Que.objects.filter(course = ppr.course, ppr = ppr).count()
+    ans_s = Ans.objects.filter(student = request.user, course  = ppr.course, ppr = ppr).exclude(answer = 'null').count()
+    ans_ns = Ans.objects.filter(student = request.user, course  = ppr.course, ppr = ppr, answer = 'null').count()
+    context = {
+        'ppr' : ppr,
+        'subject' : subject,
+        'que' : que,
+        'ans' : ans,
+        'q_total' : q_total,
+        'ans_s' : ans_s,
+        'ans_ns' : ans_ns,
+    }
+    return render(request, "test/explanation.html", context)
+
 def que_page(request):
     if request.method == 'POST':
         ppr = request.POST['ppr']
-        print(type(ppr))
+        # print(type(ppr))
         ppr = Ppr.objects.get(title = ppr)
         ans_filter = list(Ans.objects.values().filter(ppr = ppr, course = ppr.course))
         print(ans_filter)
         return JsonResponse(ans_filter, safe=False)
     else:
+        return JsonResponse({'status': 0})
+    
+def exp_page(request):
+    if request.method == 'POST':
+        ppr = request.POST['ppr']
+        print(ppr)
+        ppr = Ppr.objects.get(title = ppr)
+        ans_filter = list(Ans.objects.values().filter(ppr = ppr, course = ppr.course))
+        print(ans_filter)
+        return JsonResponse(ans_filter, safe=False)
+    else:
+        return JsonResponse({'status': 0})
+
+def next_exp(request):
+    if request.method == 'POST':
+        sid = request.POST['sid']
+        ppr = request.POST['ppr']
+        print(sid, ppr)
+        ppr = Ppr.objects.get(title = ppr)
+        que_count = Que.objects.filter(course = ppr.course, ppr = ppr).count()
+        # if sid <= que_count:
+        #     pass
+        # else:
+        #     sid=1
+        
+        que =Que.objects.get(course = ppr.course, ppr = ppr, qs_no = sid)
+        print(que)
+        quen = {"qs_no" : que.qs_no, "questions" : que.questions, "answers" : que.answers, "disc" : que.disc}
+        
+        return JsonResponse(quen)
+    else :
         return JsonResponse({'status': 0})
 
 def number_que(request):
@@ -311,13 +351,7 @@ def number_que(request):
         que_total = Que.objects.filter( course = ppr.course, ppr=ppr).count()
         # print("total que:", que_total, ans_s, ans_ns)
         quen = {"qs_no" : que.qs_no, "questions" : que.questions, "option_a" : que.option_a, "option_b" : que.option_b, "option_c" : que.option_c, "option_d" : que.option_d, "answer" : answer.answer, "total_que" : que_total, "total_saved" : ans_s, "not_saved": ans_ns}
-        # ansnfrm=AnsnChoice()
-        # print(ansnfrm)
-        # ans = list(ansnfrm)
-        # print(ans)
-        # que = Que.objects.values().filter(course = ppr.course, ppr = ppr, qs_no = sid)
-        # que_n = list(que)
-        # print(que_n)
+        
         return JsonResponse(quen)
     else:
         return JsonResponse({'status': 0})
@@ -431,10 +465,7 @@ def mark_que(request):
         return JsonResponse({'status': 0})
     
 
-def result_d(request, slug):
-    ppr = Ppr.objects.get(new_slug = slug)
-    subject = Subject.objects.filter(course = ppr.course) 
-    return render(request, "test/explanation.html")
+
 
 
 def SUBMIT(request, slug):

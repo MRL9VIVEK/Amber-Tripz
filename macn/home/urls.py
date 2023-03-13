@@ -69,6 +69,8 @@ urlpatterns = [
     path('next/', views.next_que, name="next"),
     path('mark/', views.mark_que, name="mark"),
     path('que_page/', views.que_page, name="que_page"),
+    path('exp_page/', views.exp_page, name="exp_page"),
+    path('next_exp/', views.next_exp, name="next_exp"),
     
     # path('test_page/', views.test_page, name="test_page"),
 

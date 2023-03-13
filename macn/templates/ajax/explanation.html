@@ -1,0 +1,41 @@
+<script>
+    console.log("explain page")
+    let paper = document.getElementById('ppr')
+        let csr = $("input[name=csrfmiddlewaretoken]").val();
+        mydata = {ppr: ppr.innerHTML, csrfmiddlewaretoken: csr };
+        $.ajax({
+            url: "{% url 'exp_page' %}",
+            method: "POST",
+            data: mydata,
+            success: function (data) {
+                console.log("data")
+            }
+        });
+    
+        $("#btnnext").click(function (){
+            console.log("next")
+            let qs_no = document.getElementById('q_no')
+
+        let id = parseInt(qs_no.innerHTML);
+        let q_no = id + 1;
+        let paper = document.getElementById('ppr')
+        console.log(ppr, q_no)
+        let csr = $("input[name=csrfmiddlewaretoken]").val();
+        mydata = { sid: q_no, ppr: ppr.innerHTML, csrfmiddlewaretoken: csr };
+        $.ajax({
+            url: "{% url 'next_exp' %}",
+            method: "POST",
+            data: mydata,
+            success: function (data) {
+                console.log(data.questions)
+                $("#q_no").html(data.qs_no);
+
+                $("#qst").html(data.questions);
+                $("#ans").html(data.answers);
+                $("#disc").html(data.disc);
+            }
+        })
+
+        })
+
+</script>

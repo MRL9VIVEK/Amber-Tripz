@@ -1,13 +1,15 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grid</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <title>{{ppr.title}} </title>
     <style>
-        .container{
-            display:grid;
+        .container {
+            display: grid;
             background-color: whitesmoke;
             /* height:500px; */
             /* width:600px; */
@@ -20,114 +22,132 @@
             grid-template-columns: 1fr 1fr 1fr 1fr;
             grid-template-rows: 70px 80px 175px 225px 80px;
             /* justify-content:space-evenly; */
-            
+
         }
-        *{
+
+        * {
             padding: 0;
             margin: 0;
         }
-        .box{
+
+        .box {
             background-color: whitesmoke;
             border: 2px solid rgb(192, 180, 247);
-            
+
             /* text-align: center; */
         }
-        .box1{
+
+        .box1 {
             grid-column-start: 1;
             grid-column-end: 2;
             background-color: #6161ea;
-            color:white;
+            color: white;
             display: flex;
             justify-content: center;
             align-items: center;
         }
-        .boxt{
-            display:flex;
+
+        .boxt {
+            display: flex;
             align-items: center;
             grid-column-start: 2;
             grid-column-end: 4;
             background-color: #6161ea;
-            color:white;
+            color: white;
             padding: 10px;
         }
-        .boxl{
-            
+
+        .boxl {
+
             grid-column-start: 4;
             grid-column-end: 5;
             background-color: #6161ea;
-            color:white;
+            color: white;
             display: flex;
-            justify-content: center;
+            /* justify-content: center; */
             align-items: center;
-            
+            padding: 10px;
+
         }
-        .box2{
+
+        .box2 {
             grid-column-start: 1;
             grid-column-end: 4;
-            display:flex;
+            display: flex;
             justify-content: space-around;
             align-content: center;
             align-items: center;
-            
-            
+
+
         }
-        .box3{
-            display:flex;
+
+        .box3 {
+            display: flex;
             justify-content: center;
             align-items: center;
 
         }
-        .box4{
+
+        .box4 {
             grid-column-start: 1;
             grid-column-end: 4;
-            grid-row-start:3;
-            grid-row-end:5;
+            grid-row-start: 3;
+            grid-row-end: 5;
         }
-        .box7{
+
+        .box7 {
             grid-column-start: 1;
             grid-column-end: 4;
         }
-        .sub{
+
+        .sub {
             display: flex;
             /* border : 2px solid black; */
             background-color: #6161ea;
-            color:white;
+            color: white;
             justify-content: center;
             align-items: center;
-            margin:3px;
+            margin: 3px;
 
             padding-left: 10px;
             padding-right: 10px;
             height: 40px;
         }
-        .box4{
-            padding:10px;
+
+        .box4 {
+            padding: 10px;
             font-size: 20px;
-            margin:10px;
-            overflow:auto;
+            margin: 10px;
+            overflow: auto;
         }
-        .box5{
-            display:grid;
+
+        .box5 {
+            display: grid;
             grid-template-columns: 50px auto;
             grid-template-rows: auto auto;
             text-align: center;
             /* justify-content: center; */
-            
+
         }
-        .attb{
-            display:flex;
+
+        .attb {
+            display: flex;
             justify-content: center;
             align-items: center;
+            width: 34px;
+            height: 34px;
             /* border: 2px solid black; */
-            border-radius:50%;
+            border-radius: 50%;
             margin: 5px;
-            color:white;
+            color: white;
         }
-        .att{
+
+        .att {
             margin: 5px;
         }
-        .que{
-            display:grid;
+
+        .que {
+            display: grid;
             /* border: 2px solid black; */
             grid-template-columns: 30px 30px 30px 30px;
             grid-template-rows: auto auto;
@@ -135,124 +155,199 @@
             justify-content: space-around;
             grid-row-gap: 20px;
             /* overflow: auto; */
-            
-            
+
+
         }
-        /* .no{
-            
+
+        /* .no {
+
             border-radius: 50%;
             background-color: white;
             font-size: larger;
-            padding:5px;
+            padding: 5px;
         } */
-        .box7{
-            display:flex;
-            
+
+        .box7 {
+            display: flex;
+
             align-items: center;
         }
-        .box8{
+
+        .box8 {
             display: flex;
             justify-content: center;
             align-items: center;
-            
+
         }
-        .status{
+
+        .btn_que {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+        }
+
+        /* .status {
             display: flex;
             justify-content: center;
             align-items: center;
             background-color: rgb(192, 44, 113);
-            padding: 15px; 
-            color:white;
+            padding: 15px;
+            color: white;
             margin: 5px;
-            border: 1px solid rgb(192, 44, 113);
 
-        }
-        .button {
+        } */
+        .btn {
+            display: flex;
+            justify-content: center;
+            align-items: center;
             font-size: 12px;
-            width: 30px;
-            height: 30px;
+            width: 40px;
+            height: 40px;
             border: 1px solid white;
             border-radius: 50%;
             background-color: white;
             font-size: large;
         }
+
+        .btn1 {
+            font-size: large;
+            padding: 10px;
+            margin: 10px;
+            background-color: rgb(192, 44, 113);
+            color: white;
+
+        }
     </style>
 </head>
+
 <body>
-    <div class="container">
-        <div class="box box1">Amber Tripz</div>
-        <div class="box boxt">SSC CGL T-1 2022 Practice Test</div>
-        <div class="box boxl">mrl9vivesahu@gail.com</div>
+    <form action="" method="POST" >{% csrf_token %}
+        <div class="container">
+            <div class="box box1">Amber Tripz</div>
+            <div class="box boxt" id="ppr">{{ppr.title}}</div>
+            <div class="box boxl">{{user.first_name}} {{user.last_name}}
+                <br>
+                {{user.email}}
+            </div>
 
-        <div class="box box2">
-            <div class="sub">General Intelligence and Reasoning</div>
-            <div class="sub">General Awareness</div>
-            <div class="sub">Quantitative Aptitude</div>
-            <div class="sub">English Comprehensive</div>
-        </div>
-        <div class="box box3">Time Left : 30:00</div>
-        <div class="box box4" style="padding:6px;">
-            <div>
-            The ratio of efficiency of P is to R is 7 : 4 and the ratio of number of days taken by Q is to R is 2 : 3 while working alone P takes 9 days less than R to complete the work. If Q and R started the work and left after 2 days then find the number of days taken by P to finish the remaining work?
-        </div>
-        <br>
-        <br>
+            <div class="box box2">
+                {% for sub in subject %}
+                <div class="sub">{{sub.subject_name}}</div>
+                {% endfor %}
 
-        <div><input type="radio" name="answer" /> A. &nbsp 64/7 days</div>
-        <br>
-        <div><input type="radio" name="answer" /> B. &nbsp  8 days</div>
-        <br>
-        <div><input type="radio" name="answer" /> C. &nbsp  32/7 days</div>
-        <br>
-        <div><input type="radio" name="answer" /> D. &nbsp 128/7 days</div>
-        </div>
-        <div class="box box5">
-            <div class="attb" style="background-color: green ;">1</div>
-            <div class="att">Answered</div>
-            <div class="attb" style="background-color: rgb(201, 45, 110) ;">2</div>
-            <div class="att">Not Answered</div>
-            <div class="attb" style="background-color: rgb(69, 70, 69);">3</div>
-            <div class="att">Not Visited</div>
-            <div class="attb" style="background-color: rgb(59, 19, 167) ;">4</div>
-            <div class="att">Mark For Review</div>
+            </div>
             
+            <div class="box box3">Time Left : &nbsp<span id="leo">00:00</span></div>
+            <form action="">
+                <div class="box box4" style="padding:20px;">
+                    {% for q in que %}
+                    <div>
+                        Que. <span id="q_no">{{ q.qs_no }}</span> .&emsp;&emsp;<span id="qst">{{ q.questions }}</span>
+
+
+                    </div>
+                    <div><br>
+                        <img src="/{{ q.image }}" alt="" width="auto" height=""> </div>
+
+                    
+                    
+
+                   <div><span class="aaa"> Correct Answer :  </span> .&emsp;&emsp;<span  id="ans">{{ q.answers }} .&emsp;&emsp; <img src="/{{ q.image_a }}" alt="" width="auto" height=""></span></div>
+                    <br><div><span class="bbb"> Discription :  </span> .&emsp;&emsp;<span  id="disc">{{ q.disc }} .&emsp;&emsp; <img src="/{{ q.image_b }}" alt="" width="auto" height=""></span></div>
+                    <!-- <br><div><span class="ccc"><input type="radio" name="option" class="option" id ="C" value="C"> C </span> .&emsp;&emsp;<span  id="ans_c">{{ q.option_c }} .&emsp;&emsp; <img src="/{{ q.image_c }}" alt="" width="auto" height=""></span></div> -->
+                    <!-- <br><div><span class="ddd"><input type="radio" name="option" class="option" id ="D" value="D"> D </span> .&emsp;&emsp;<span  id="ans_d">{{ q.option_d }} .&emsp;&emsp; <img src="/{{ q.image_d }}" alt="" width="auto" height=""></span></div> -->
+                    {% endfor %}
+                </div>
+
+                <div class="box box5">
+                    <div class="attb" id="saved" style="background-color: green ;">{{ans_s}}</div>
+                    <div class="att">Answered</div>
+                    <div class="attb" id="not_answered" style="background-color: rgb(201, 45, 110) ;">{{ans_ns}}</div>
+                    <div class="att">Not Answered</div>
+                    <div class="attb" id="not_visited" style="background-color: white; color: black;">{{q_total}}</div>
+                    <div class="att">Not Visited</div>
+                    <div class="attb" id="mark_review" style="background-color: rgb(59, 19, 167) ;">0</div>
+                    <div class="att">Mark For Review</div>
+
+                </div>
+                <div class="box" style="background-color: rgb(190, 241, 241); overflow:auto;">
+                    <br>
+                    <div style="margin-left: 10px;">Choose a Question:</div>
+                    <br>
+                    <div class="que">
+                        {% for q in ppr.que_set.all %}
+                        <div class="no"><input type="button" 
+                                    class="btn btn_que {{q.qs_no}} " data-sid="{{q.qs_no}}" value="{{q.qs_no}}" /></div>
+                        {% endfor %}
+                        
+                    </div>
+                </div>
+                <div class="box box7" style="justify-content: space-around;">
+                    <div class="status"><input type="button" class="btn1" id="clear" value="Clear Response" /></div>
+                    <div class="status">
+<!--                         
+                        <button type="submit"
+                                class="btn1"> Mark for review and next</button> -->
+                                <input type="button" class="btn1" id="mark" value="Mark for review and next" />
+                        
+                    </div>
+                    
+                    <div class="status">
+                    
+                        <input type="button" id="btnnext" class="btn1" value="Save and Next" />
+                    </div>
+                    
+                <input id="inp" type="text">
         </div>
-        <div class="box" style="background-color: rgb(190, 241, 241); overflow:auto;">
-            <br>
-            <div style="margin-left: 10px;">Choose a Question:</div>
-            <br>
-            <div class="que">
-                <div class="no"><a href=""><button class="button">1</button></a></div>
-                <div class="no"><a href=""><button class="button">2</button></a></div>
-                <div class="no"><a href=""><button class="button">3</button></a></div>
-                <div class="no"><a href=""><button class="button">4</button></a></div>
-                <div class="no"><a href=""><button class="button">5</button></a></div>
-                <div class="no"><a href=""><button class="button">6</button></a></div>
-                <div class="no"><a href=""><button class="button">7</button></a></div>
-                <div class="no"><a href=""><button class="button">8</button></a></div>
-                <div class="no"><a href=""><button class="button">9</button></a></div>
-                <div class="no"><a href=""><button class="button">10</button></a></div>
-                <div class="no"><a href=""><button class="button">11</button></a></div>
-                <div class="no"><a href=""><button class="button">12</button></a></div>
-                <div class="no"><a href=""><button class="button">13</button></a></div>
-                <div class="no"><a href=""><button class="button">14</button></a></div>
-                <div class="no"><a href=""><button class="button">15</button></a></div>
-                <div class="no"><a href=""><button class="button">16</button></a></div>
-                <div class="no"><a href=""><button class="button">17</button></a></div>
-                <div class="no"><a href=""><button class="button">18</button></a></div>
-                <div class="no"><a href=""><button class="button">19</button></a></div>
-                <div class="no"><a href=""><button class="button">20</button></a></div>
-                 </div>
-        </div>
-        <div class="box box7" >
-            <div class=""><button class="status">Clear Response</button></div>
-            <div class=""><button class="status">Mark For Review and Next</button></div>
-            <div class=""><a href=""><button class="status">Save and Next</button></a></div>
-        </div>
-        <div class="box box8">
-            <div style="background-color: rgb(192, 44, 113);padding: 15px; color:white;">Submit</div>
-        </div> 
-        
+    </form>
+    <div class="box box8">
+         <div><a id="sub" href="/submit/{{ppr.new_slug}}"><input type="button" class="btn1" value="Submit" /></a></div>
+
     </div>
+
+    </div>
+    <script src="{% static 'js/jquery.js' %}"></script>
+    <script src="{% static 'js/popper.js' %}"></script>
+    <script src="{% static 'js/bootstrap.js' %}"></script>
+    {% include "ajax/explanation.html" %}
+    <!-- <script>
+        var a = document.getElementById('sub').href
+        console.log(a)
+        var time = document.getElementById('leo')
+        console.log(time.innerHTML)
+        
+        distance = time.innerHTML * 60 * 1000
+        var x = setInterval(function () {
+            // distance = sessionStorage.getItem('distance')
+            
+
+            distance = distance - 1000
+            sessionStorage.setItem('distance', distance);
+            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            if (minutes > 0 && hours > 0) {
+                document.getElementById("leo").innerHTML = hours + "h " + minutes + "m " + seconds + "s ";
+            }
+            else if (hours == 0 && minutes > 0) {
+                document.getElementById("leo").innerHTML = minutes + "m " + seconds + "s ";
+            }
+            else {
+                document.getElementById("leo").innerHTML = seconds + "s ";
+            }
+            if (distance < 600000) {
+
+                document.getElementById("leo").style.color = "red";
+            }
+            $('#inp').val(distance)
+            if (distance < 0) {
+                clearInterval(x);
+                document.getElementById("leo").innerHTML = "EXPIRED"
+                // window.location.assign(a)
+            }
+        }, 1000);
+    </script> -->
 </body>
+
 </html>

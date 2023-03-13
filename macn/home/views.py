@@ -285,36 +285,43 @@ def que_page(request):
     else:
         return JsonResponse({'status': 0})
     
-def exp_page(request):
-    if request.method == 'POST':
-        ppr = request.POST['ppr']
-        print(ppr)
-        ppr = Ppr.objects.get(title = ppr)
-        ans_filter = list(Ans.objects.values().filter(ppr = ppr, course = ppr.course))
-        print(ans_filter)
-        return JsonResponse(ans_filter, safe=False)
-    else:
-        return JsonResponse({'status': 0})
+
 
 def next_exp(request):
     if request.method == 'POST':
         sid = request.POST['sid']
         ppr = request.POST['ppr']
-        print(sid, ppr)
+        # print(sid, ppr)
         ppr = Ppr.objects.get(title = ppr)
         que_count = Que.objects.filter(course = ppr.course, ppr = ppr).count()
-        # if sid <= que_count:
-        #     pass
-        # else:
-        #     sid=1
+        sid = int(sid)
+        if sid <= que_count:
+            pass
+        else:
+            sid=1
         
         que =Que.objects.get(course = ppr.course, ppr = ppr, qs_no = sid)
-        print(que)
+        # print(que)
         quen = {"qs_no" : que.qs_no, "questions" : que.questions, "answers" : que.answers, "disc" : que.disc}
         
         return JsonResponse(quen)
     else :
         return JsonResponse({'status': 0})
+
+def number_exp(request):
+    if request.method == 'POST':
+        sid = request.POST['sid']
+        # print("next q", sid)
+        ppr = request.POST['ppr']
+        ppr = Ppr.objects.get(title = ppr)
+        que = Que.objects.get(course = ppr.course, ppr = ppr, qs_no = sid)
+        # print(que)
+        quen = {"qs_no" : que.qs_no, "questions" : que.questions, "answers" : que.answers, "disc" : que.disc}
+        
+        return JsonResponse(quen)
+    else:
+        return JsonResponse({'status': 0})
+
 
 def number_que(request):
     
